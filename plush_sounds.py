@@ -27,8 +27,8 @@ channel_ids = [
 channels = [pygame.mixer.Channel(i) for i in channel_ids]
 sound_queues = [list() for c in channels]
 
-DENDRITE_1_BUTTON_SOUND = Sound("shutter16.wav")
-DENDRITE_2_BUTTON_SOUND = Sound("rooster16.wav")
+DENDRITE_1_BUTTON_SOUND = Sound("sounds/organ_C4.ogg")
+DENDRITE_2_BUTTON_SOUND = Sound("sounds/organ_E4.ogg")
 
 def queue_sound(sound, channel_id):
     # play sound if channel is free, else queue it for later
