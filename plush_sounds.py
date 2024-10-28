@@ -10,7 +10,7 @@ DENDRITE_2_BUTTON = 2
 DENDRITE_2_WEIGHT = 3
 DENDRITE_3_BUTTON = 4
 DENDRITE_3_WEIGHT = 5
-THRESHOLD_VALUE   = 6
+THRESHOLD_WEIGHT   = 6
 ACTIVATION_FIRE   = 7
 
 channel_ids = [
@@ -20,13 +20,46 @@ channel_ids = [
     DENDRITE_2_WEIGHT,
     DENDRITE_3_BUTTON,
     DENDRITE_3_WEIGHT,
-    THRESHOLD_VALUE,
+    THRESHOLD_WEIGHT,
     ACTIVATION_FIRE
 ]
 
 channels = [pygame.mixer.Channel(i) for i in channel_ids]
 sound_queues = [list() for c in channels]
 
+DENDRITE_1_WEIGHT_SOUNDS = {
+    0 : Sound("sounds/organ_C4.ogg"),   # 0
+    1 : Sound("sounds/organ_D4.ogg"),   # +1
+    2 : Sound("sounds/organ_E4.ogg"),   # +2
+    3 : Sound("sounds/organ_F4.ogg"),   # +3
+    7 : Sound("sounds/organ_Gb3.ogg"),  # -3
+    8 : Sound("sounds/organ_Ab3.ogg"),  # -2
+    9 : Sound("sounds/organ_Bb3.ogg")   # -1
+}
+
+# index is the starting value of the weight before increase
+DENDRITE_1_WEIGHT_INCREASE_SOUNDS = {
+    0 : Sound("sounds/Transitions/organ_C-D.ogg"),
+    1 : Sound("sounds/Transitions/organ_D-E.ogg"),
+    2 : Sound("sounds/Transitions/organ_E-F.ogg"),
+    7 : Sound("sounds/Transitions/organ_Gb-Ab.ogg"),
+    8 : Sound("sounds/Transitions/organ_Ab-Bb.ogg"),
+    9 : Sound("sounds/Transitions/organ_Bb-C.ogg")
+}
+
+# index is the starting value of the weight before decrease
+DENDRITE_1_WEIGHT_DECREASE_SOUNDS = {
+    0 : Sound("sounds/Transitions/organ_C-Bb.ogg"),
+    1 : Sound("sounds/Transitions/organ_D-C.ogg"),
+    2 : Sound("sounds/Transitions/organ_E-D.ogg"),
+    3 : Sound("sounds/Transitions/organ_F-E.ogg"),
+    8 : Sound("sounds/Transitions/organ_Ab-Gb.ogg"),
+    9 : Sound("sounds/Transitions/organ_Bb-Ab.ogg")
+}
+
+
+
+# Temporary hacks
 DENDRITE_1_BUTTON_SOUND = Sound("sounds/organ_C4.ogg")
 DENDRITE_2_BUTTON_SOUND = Sound("sounds/organ_E4.ogg")
 
