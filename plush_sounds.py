@@ -37,31 +37,65 @@ DENDRITE_1_WEIGHT_SOUNDS = {
     9 : Sound("sounds/organ_Bb3.ogg")   # -1
 }
 
+
 # index is the starting value of the weight before increase
 DENDRITE_1_WEIGHT_INCREASE_SOUNDS = {
-    0 : Sound("sounds/Transitions/organ_C-D.ogg"),
-    1 : Sound("sounds/Transitions/organ_D-E.ogg"),
-    2 : Sound("sounds/Transitions/organ_E-F.ogg"),
-    7 : Sound("sounds/Transitions/organ_Gb-Ab.ogg"),
-    8 : Sound("sounds/Transitions/organ_Ab-Bb.ogg"),
-    9 : Sound("sounds/Transitions/organ_Bb-C.ogg")
+    0 : Sound("sounds/Transitions/organ_C-D_fade.ogg"),
+    1 : Sound("sounds/Transitions/organ_D-E_fade.ogg"),
+    2 : Sound("sounds/Transitions/organ_E-F_fade.ogg"),
+ #   7 : Sound("sounds/Transitions/organ_Gb-Ab_fade.ogg"),
+ #   8 : Sound("sounds/Transitions/organ_Ab-Bb_fade.ogg"),
+ #   9 : Sound("sounds/Transitions/organ_Bb-C_fade.ogg")
 }
 
 # index is the starting value of the weight before decrease
 DENDRITE_1_WEIGHT_DECREASE_SOUNDS = {
-    0 : Sound("sounds/Transitions/organ_C-Bb.ogg"),
-    1 : Sound("sounds/Transitions/organ_D-C.ogg"),
-    2 : Sound("sounds/Transitions/organ_E-D.ogg"),
-    3 : Sound("sounds/Transitions/organ_F-E.ogg"),
-    8 : Sound("sounds/Transitions/organ_Ab-Gb.ogg"),
-    9 : Sound("sounds/Transitions/organ_Bb-Ab.ogg")
+    0 : Sound("sounds/Transitions/organ_C-Bb_fade.ogg"),
+ #   1 : Sound("sounds/Transitions/organ_D-C_fade.ogg"),
+ #   2 : Sound("sounds/Transitions/organ_E-D_fade.ogg"),
+ #   3 : Sound("sounds/Transitions/organ_F-E_fade.ogg"),
+    8 : Sound("sounds/Transitions/organ_Ab-Gb_fade.ogg"),
+    9 : Sound("sounds/Transitions/organ_Bb-Ab_fade.ogg")
 }
 
+DENDRITE_2_WEIGHT_SOUNDS = DENDRITE_1_WEIGHT_SOUNDS
+DENDRITE_2_WEIGHT_INCREASE_SOUNDS = DENDRITE_1_WEIGHT_INCREASE_SOUNDS
+DENDRITE_2_WEIGHT_DECREASE_SOUNDS = DENDRITE_1_WEIGHT_DECREASE_SOUNDS 
+
+DENDRITE_3_WEIGHT_SOUNDS = DENDRITE_1_WEIGHT_SOUNDS
+DENDRITE_3_WEIGHT_INCREASE_SOUNDS = DENDRITE_1_WEIGHT_INCREASE_SOUNDS
+DENDRITE_3_WEIGHT_DECREASE_SOUNDS = DENDRITE_1_WEIGHT_DECREASE_SOUNDS 
 
 
 # Temporary hacks
 DENDRITE_1_BUTTON_SOUND = Sound("sounds/organ_C4.ogg")
 DENDRITE_2_BUTTON_SOUND = Sound("sounds/organ_E4.ogg")
+DENDRITE_3_BUTTON_SOUND = Sound("sounds/organ_F4.ogg")
+
+DENDRITE_WEIGHT_SOUNDS = [
+    DENDRITE_1_WEIGHT_SOUNDS,
+    DENDRITE_2_WEIGHT_SOUNDS,
+    DENDRITE_3_WEIGHT_SOUNDS
+]
+
+DENDRITE_WEIGHT_INCREASE_SOUNDS = [
+    DENDRITE_1_WEIGHT_INCREASE_SOUNDS,
+    DENDRITE_2_WEIGHT_INCREASE_SOUNDS,
+    DENDRITE_3_WEIGHT_INCREASE_SOUNDS
+]
+
+DENDRITE_WEIGHT_INCREASE_SOUNDS = [
+    DENDRITE_1_WEIGHT_DECREASE_SOUNDS,
+    DENDRITE_2_WEIGHT_DECREASE_SOUNDS,
+    DENDRITE_3_WEIGHT_DECREASE_SOUNDS
+]
+
+
+DENDRITE_BUTTON_SOUNDS = [
+    DENDRITE_1_BUTTON_SOUND,
+    DENDRITE_2_BUTTON_SOUND,
+    DENDRITE_3_BUTTON_SOUND
+]
 
 def queue_sound(sound, channel_id):
     # play sound if channel is free, else queue it for later
