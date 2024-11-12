@@ -4,6 +4,13 @@ global dots
 
 NUM_PIXELS = 3*7 + 2*9 + 4
 
+DENDRITE_1_LED_START_INDEX = 0
+DENDRITE_2_LED_START_INDEX = 7
+DENDRITE_3_LED_START_INDEX = 14
+NET_INPUT_LED_START_INDEX = 21
+THRESHOLD_LED_START_INDEX = 30
+AXON_LED_START_INDEX = 39
+
 def init_leds():
     global dots
     dots = dotstar.DotStar(board.SCK, board.MOSI, NUM_PIXELS, brightness=0.25)
