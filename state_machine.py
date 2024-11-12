@@ -47,26 +47,35 @@ class RotarySwitch():
         self.gpio_pins = gpio_pins
         self.debouncer = Debouncer(Debouncer.ROTARY_PERSISTENCE_TIME)
 
-    def decode_switch(pins):
+    def decode_switch(self):
         value = 0
-        for i in range(len(gpio_pins)):
+        for i in range(len(self.gpio_pins)):
             if self.gpio_pins[i].value == False:
                 value += (1 << i)
         return value
 
+    def update(self): pass
+
 
 class DendriteRotarySwitch(RotarySwitch):
+    def __init__(self, dendrite, name, index, gpio_pins):
+        super().__init__(name, index, gpio_pins)
+        self.dendrite = dendrite
+
     def update(self):
-        new_value = self.debouncer(decode_pins(self.pins))
-        if (self.current_value < new_value or new_value == 0) and self.dendrite.WEIGHT_VALUES.get(new_value):
+        new_value = self.debouncer(self.decode_pins(self.gpio_pins))
+        if (self.current_value < new_value or new_value == 0) and
+                self.dendrite.WEIGHT_VALUES.get(new_value):
             self.dendrite.increase_weight()
-        elif (self.current_value > new_value or self.current_value == 0) and self.dendrite.WEIGHT_VALUES.get(new_value):
+        elif (self.current_value > new_value or self.current_value == 0) and
+                self.dendrite.WEIGHT_VALUES.get(new_value):
             self.dendrite.decrease_weight()
         else:
             pass  # ignored switch position
 
         
 class BodyRotarySwitch(RotarySwitch):
+    # fill this in later
     pass
 
 
@@ -84,20 +93,20 @@ class Dendrite():
         9 : -1
     }
 
-    def __init__(self, name, dendrite_index, gpio_pins, led_start_index,
-                 switch_audio_channel, button_audio_channel):
+    def __init__(self, name, dendrite_index, rotary_gpio_pins, button_gpio_pin, barrel_gpio_pin,
+                 led_start_index, rotary_audio_channel, button_audio_channel):
         self.name = name
         self.dendrite_index = dendrite_index
-        self.rotary_switch = DendriteRotarySwitch(name, gpio_pins)
-        self.rotary_switch.dendrite = self
+        self.rotary_switch = DendriteRotarySwitch(self, name, rotary_gpio_pins)
+        self.button = Button(self, button_gpio_pin, barrel_gpio_pin)
         self.led_start_index = led_start_index
-        self.switch_audio_channel = switch_audio_channel
+        self.rotary_audio_channel = rotary_audio_channel
         self.button_audio_channel = button_audio_channel
         self.weight_index = 0
 
     def increase_weight(self):
         sound = WEIGHT_INCREASE_SOUNDS[self.dendrite_index][self.weight_index]
-        queue_sound(sound, self.switch_audio_channel)
+        queue_sound(sound, self.rotary_audio_channel)
         self.weight_index += 1
         if self.weight_index not in WEIGHT_VALUES:  # wrap around
             self.weight_index = 0
@@ -105,7 +114,7 @@ class Dendrite():
 
     def decrease_weight(self):
         sound = WEIGHT_DECREASE_SOUNDS[self.dendrite_index][self.weight_index]
-        queue_sound(sound, self.switch_audio_channel)
+        queue_sound(sound, self.rotary_audio_channel)
         self.weight_index -= 1
         if self.weight_index not in WEIGHT_VALUES:  # wrap around
             self.weight_index = max(WEIGHT_VALUES.keys())
