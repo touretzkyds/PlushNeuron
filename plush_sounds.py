@@ -1,12 +1,6 @@
 import pygame
 from pygame.mixer import Sound
 
-def init_sound():
-    pygame.mixer.init()
-    #pygame.mixer.init(4096, -16, 1, 1024)
-    pygame.mixer.music.set_volume(0.9) #volume at 90%
-
-
 # Mixer channels
 DENDRITE_1_BUTTON_CHANNEL = 0
 DENDRITE_1_WEIGHT_CHANNEL = 1
@@ -28,17 +22,24 @@ channel_ids = [
     ACTIVATION_FIRE_CHANNEL
 ]
 
+#pygame.mixer.pre_init(buffer=44100)
+pygame.mixer.init()
+#pygame.mixer.init(4096, -16, 1, 1024)
+pygame.mixer.music.set_volume(0.9) #volume at 90%
 channels = [pygame.mixer.Channel(i) for i in channel_ids]
+
 sound_queues = [list() for c in channels]
 
 DENDRITE_1_WEIGHT_SOUNDS = {
     0 : Sound("sounds/organ_C4.ogg"),   # 0
-    1 : Sound("sounds/organ_D4.ogg"),   # +1
-    2 : Sound("sounds/organ_E4.ogg"),   # +2
-    3 : Sound("sounds/organ_F4.ogg"),   # +3
-    7 : Sound("sounds/organ_Gb3.ogg"),  # -3
-    8 : Sound("sounds/organ_Ab3.ogg"),  # -2
-    9 : Sound("sounds/organ_Bb3.ogg")   # -1
+    1 : Sound("sounds/organ_E4.ogg"),   # +1
+    2 : Sound("sounds/organ_G4.ogg"),   # +2
+    3 : Sound("sounds/organ_C5.ogg"),   # +3
+    4 : Sound("sounds/organ_E5.ogg"),   # +4
+    6 : Sound("sounds/organ_B2.ogg"),   # -4
+    7 : Sound("sounds/organ_D#3.ogg"),  # -3
+    8 : Sound("sounds/organ_F#3.ogg"),  # -2
+    9 : Sound("sounds/organ_A3.ogg")   # -1
 }
 
 
@@ -77,21 +78,21 @@ DENDRITE_3_WEIGHT_DECREASE_SOUNDS = DENDRITE_1_WEIGHT_DECREASE_SOUNDS
 # Temporary hacks
 DENDRITE_1_BUTTON_SOUND = Sound("sounds/organ_C4.ogg")
 DENDRITE_2_BUTTON_SOUND = Sound("sounds/organ_E4.ogg")
-DENDRITE_3_BUTTON_SOUND = Sound("sounds/organ_F4.ogg")
+DENDRITE_3_BUTTON_SOUND = Sound("sounds/organ_G4.ogg")
 
-DENDRITE_WEIGHT_SOUNDS = [
+WEIGHT_SOUNDS = [
     DENDRITE_1_WEIGHT_SOUNDS,
     DENDRITE_2_WEIGHT_SOUNDS,
     DENDRITE_3_WEIGHT_SOUNDS
 ]
 
-DENDRITE_WEIGHT_INCREASE_SOUNDS = [
+WEIGHT_INCREASE_SOUNDS = [
     DENDRITE_1_WEIGHT_INCREASE_SOUNDS,
     DENDRITE_2_WEIGHT_INCREASE_SOUNDS,
     DENDRITE_3_WEIGHT_INCREASE_SOUNDS
 ]
 
-DENDRITE_WEIGHT_INCREASE_SOUNDS = [
+WEIGHT_DECREASE_SOUNDS = [
     DENDRITE_1_WEIGHT_DECREASE_SOUNDS,
     DENDRITE_2_WEIGHT_DECREASE_SOUNDS,
     DENDRITE_3_WEIGHT_DECREASE_SOUNDS
@@ -125,6 +126,7 @@ def nothing_to_play():
             return False
     return True
 
+"""
 while True:
     update_all_channels()
     if nothing_to_play():
@@ -136,4 +138,4 @@ while True:
                 queue_sound(DENDRITE_2_BUTTON_SOUND, DENDRITE_2_BUTTON)
             else:
                 print(f"Unrecognized: '{ch}'")
-        
+"""

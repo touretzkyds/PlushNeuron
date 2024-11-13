@@ -1,7 +1,5 @@
 import time
 import datetime
-import pygame
-import pygame.mixer
 #import RPi.GPIO as GPIO
 
 import led_display
@@ -29,9 +27,9 @@ dendrite3 = Dendrite("dendrite3", 2,
 
 dendrites = [dendrite1, dendrite2, dendrite3]
 
+gpio_pins.init_gpio()
 led_display.init_leds()
 plush_sounds.init_sound()
-gpio_pins.init_gpio()
 
 while True:
     for d in dendrites:

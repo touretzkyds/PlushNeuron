@@ -1,4 +1,4 @@
-import adafruit_dotstar as dotstar
+#import adafruit_dotstar as dotstar
 
 global dots
 
@@ -22,7 +22,7 @@ def init_leds():
     dots = dotstar.DotStar(board.SCK, board.MOSI, NUM_PIXELS, brightness=0.25)
     for i in range(NUM_PIXELS):
         dots[i].value = (0, 0, 0)
-
+    dots.show()
 
 RGB_COLORS = (
     (  0,   0,   0),  # 0 - black
@@ -46,6 +46,8 @@ DENDRITE_ROTARY_COLORS = (
     (0, 0, 0, 0, 1, 0, 0)  # 9 = red
 )
 
+DENDRITE_ROTARY_BLANK = (RGB_COLORS[0],) * len(DENDRITE_ROTARY_COLORS[0])
+
 THRESHOLD_ROTARY_COLORS = (
     (0, 0, 0, 0, 3, 0, 0, 0, 0), #  0 = blue
     (0, 0, 0, 4, 0, 0, 0, 0, 0), #  1 = dim-green
@@ -66,8 +68,7 @@ THRESHOLD_ROTARY_COLORS = (
     (0, 0, 0, 0, 0, 5, 0, 0, 0), # 15 = dim-red
 )
 
-def display_pattern(patterns, led_start_index, value):
-    pattern = patterns[value]
+def display_pattern(pattern, led_start_index):
     for i in range(len(pattern)):
         dots[led_start_index+i] = RGB_COLORS[pattern[i]]
     dots.show()
