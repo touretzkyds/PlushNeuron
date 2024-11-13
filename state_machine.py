@@ -1,7 +1,7 @@
 import datetime
 
-NUM_DENDRITES = 3
-NUM_ROTARIES = 4
+from leds_display import display_pattern, DENDRITE_ROTARY_COLORS
+from plush_sounds import queue_sound, WEIGHT_INCREASE_SOUNDS, WEIGHT_DECREASE_SOUNDS
 
 start_time = datetime.datetime.now()
 
