@@ -29,7 +29,6 @@ dendrites = [dendrite1, dendrite2, dendrite3]
 
 gpio_pins.init_gpio()
 led_display.init_leds()
-plush_sounds.init_sound()
 
 while True:
     for d in dendrites:
