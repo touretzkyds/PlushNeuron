@@ -1,6 +1,5 @@
-#import adafruit_dotstar as dotstar
-
-global dots
+import board
+import adafruit_dotstar as dotstar
 
 NUM_DENDRITES = 3
 NUM_PIXELS_WEIGHT = 7
@@ -21,7 +20,7 @@ def init_leds():
     global dots
     dots = dotstar.DotStar(board.SCK, board.MOSI, NUM_PIXELS, brightness=0.25)
     for i in range(NUM_PIXELS):
-        dots[i].value = (0, 0, 0)
+        dots[i] = (0, 0, 0)
     dots.show()
 
 RGB_COLORS = (

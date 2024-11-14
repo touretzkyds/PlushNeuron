@@ -43,10 +43,10 @@ class Debouncer():
 
 
 class RotarySwitch():
-    def __init__(self, name, index, gpio_pins):
-        super().__init__(name, index)
+    def __init__(self, name, gpio_pins):
         self.gpio_pins = gpio_pins
         self.debouncer = Debouncer(Debouncer.ROTARY_PERSISTENCE_TIME)
+        self.current_value = 0
 
     def decode_switch(self):
         value = 0
@@ -59,12 +59,12 @@ class RotarySwitch():
 
 
 class DendriteRotarySwitch(RotarySwitch):
-    def __init__(self, dendrite, name, index, gpio_pins):
-        super().__init__(name, index, gpio_pins)
+    def __init__(self, dendrite, name, gpio_pins):
+        super().__init__(name, gpio_pins)
         self.dendrite = dendrite
 
     def update(self):
-        new_value = self.debouncer(self.decode_pins(self.gpio_pins))
+        new_value = self.debouncer.debounce(self.decode_switch())
         if (self.current_value < new_value or new_value == 0) and \
                 self.dendrite.WEIGHT_VALUES.get(new_value):
             self.dendrite.increase_weight()
@@ -81,21 +81,22 @@ class BodyRotarySwitch(RotarySwitch):
 
 
 class StateMachine():
-    def __init__(self,name,index=None,states=()):
+    def __init__(self,name, states=()):
+        print(f"***StateMachine name={name} states={states}")
         self.name = name
         self.states = states
-        self.current_state = states[0]
+        self.current_state = self.states[0]
         self.state_entry_time = -1
         self.state_duration = -1
 
-    def update():
+    def update(self):
         now = now_msecs()
         self.state_duration = now - self.state_entry_time
 
-    def transition(new_state):
+    def transition(self, new_state):
         if new_state in self.states:
             self.current_state = new_state
-            sef.state_entry_time = now_msecs()
+            self.state_entry_time = now_msecs()
             self.state_duration = 0
         else:
             print(f"{self.name} transition to invalid state '{new_state}'")
@@ -104,7 +105,8 @@ class StateMachine():
 class Button(StateMachine):
     states = Enum('ButtonStates', [('BUTTON_OFF', 1), ('BUTTON_ON', 2)])
     def __init__(self, dendrite, button_gpio_pin, barrel_gpio_pin):
-        super.__init__(list(states))
+        print("***> ", list(self.states))
+        super().__init__(f"Button {dendrite.dendrite_index}",list(self.states))
         self.dendrite = dendrite
         self.button_gpio_pin = button_gpio_pin
         self.barrel_gpio_pin = barrel_gpio_pin
@@ -114,7 +116,7 @@ class Button(StateMachine):
     def update(self):
         super().update()
         # not handling the barrel connector for now, just the button
-        new_value = self.debouncer(self.button_gpio_pin.value + 0)
+        new_value = self.debouncer.debounce(self.button_gpio_pin.value + 0)
         if new_value > self.current_value:
             self.button_pressed()
         elif new_value < self.current_value:
@@ -134,8 +136,8 @@ class Button(StateMachine):
 
 
 class LEDDisplay(StateMachine):
-    def __init__(self, states, led_start_index):
-        super().__init__(states)
+    def __init__(self, name, states, led_start_index):
+        super().__init__(name, states)
         self.led_start_index = led_start_index
 
 
@@ -145,7 +147,7 @@ class WeightDisplay(LEDDisplay):
     states = Enum('WeightDisplayStates', [('IDLE', 1), ('FLASH_OFF', 2), ('FLASH_ON', 3), ('SHOW_WEIGHT', 4)])
 
     def __init__(self, dendrite, led_start_index):
-        super().__init__(states, led_start_index)
+        super().__init__(f"WeightDisplay {dendrite.dendrite_index}", list(self.states), led_start_index)
         self.dendrite = dendrite
 
     def update(self):
