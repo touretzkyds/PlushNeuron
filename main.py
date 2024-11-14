@@ -5,7 +5,7 @@ import datetime
 import led_display
 import plush_sounds
 import gpio_pins
-from state_machine import Dendrite
+from neuron_components import Dendrite
 
 dendrite1 = Dendrite("dendrite1", 0, \
                      gpio_pins.DENDRITE_1_ROTARY_PINS, \
