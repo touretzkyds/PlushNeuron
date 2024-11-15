@@ -42,5 +42,5 @@ while True:
         d.update()
     # update cell body
     # update axon
-    plush_sounds.udpate_all_channels()
+    plush_sounds.update_all_channels()
     time.sleep(0.01)

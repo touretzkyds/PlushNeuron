@@ -46,4 +46,3 @@ class StateMachine():
             self.state_duration = 0
         else:
             print(f"{self.name} transition to invalid state '{new_state}'")
-        self.update()

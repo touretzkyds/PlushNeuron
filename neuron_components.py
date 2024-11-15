@@ -1,7 +1,7 @@
 import datetime
 from enum import Enum
 
-from state_machine import StateMachine
+from state_machine import StateMachine, now_msecs
 from led_display import display_pattern, DENDRITE_ROTARY_COLORS, DENDRITE_ROTARY_BLANK, THRESHOLD_ROTARY_COLORS
 from plush_sounds import queue_sound, WEIGHT_SOUNDS, WEIGHT_INCREASE_SOUNDS, WEIGHT_DECREASE_SOUNDS
 
@@ -59,11 +59,14 @@ class DendriteRotarySwitch(RotarySwitch):
 
     def update(self):
         new_value = self.debouncer.debounce(self.decode_switch())
-        if (self.current_value < new_value or new_value == 0) and \
+        if (new_value > self.current_value or (new_value == 0 and self.current_value > 5)) and \
                 self.dendrite.WEIGHT_VALUES.get(new_value):
+            print(f"dendrite rotary update: cur={self.current_value} new={new_value}")
+            self.current_value = new_value
             self.dendrite.increase_weight()
-        elif (self.current_value > new_value or self.current_value == 0) and \
+        elif (new_value < self.current_value or (self.current_value == 0 and new_value > 5)) and \
                 self.dendrite.WEIGHT_VALUES.get(new_value):
+            self.current_value = new_value
             self.dendrite.decrease_weight()
         else:
             pass  # ignored switch position
@@ -123,10 +126,10 @@ class WeightDisplay(LEDDisplay):
 
     def update(self):
         super().update()
-        if self.current_state == self.states.FLASH_ON and self.state_duration >= FLASH_ON_TIME:
+        if self.current_state == self.states.FLASH_ON and self.state_duration >= self.FLASH_ON_TIME:
             display_pattern(DENDRITE_ROTARY_BLANK, self.led_start_index)
             self.transition(self.states.FLASH_OFF)
-        elif self.current_state == self.states.FLASH_OFF and self.state_duration >= FLASH_OFF_TIME:
+        elif self.current_state == self.states.FLASH_OFF and self.state_duration >= self.FLASH_OFF_TIME:
             weight_index = self.dendrite.weight_index
             display_pattern(DENDRITE_ROTARY_COLORS[self.dendrite.weight_index], self.led_start_index)
             self.transition(self.states.FLASH_ON)
@@ -171,17 +174,14 @@ class Dendrite():
     def increase_weight(self):
         sound = WEIGHT_INCREASE_SOUNDS[self.dendrite_index][self.weight_index]
         queue_sound(sound, self.rotary_audio_channel)
-        self.weight_index += 1
-        if self.weight_index not in self.WEIGHT_VALUES:  # wrap around
-            self.weight_index = 0
+        self.weight_index = self.rotary_switch.current_value
+        print(f"increase weight: weight_index now {self.weight_index}")
         self.weight_display.transition(WeightDisplay.states.SHOW_WEIGHT)
 
     def decrease_weight(self):
         sound = WEIGHT_DECREASE_SOUNDS[self.dendrite_index][self.weight_index]
         queue_sound(sound, self.rotary_audio_channel)
-        self.weight_index -= 1
-        if self.weight_index not in self.WEIGHT_VALUES:  # wrap around
-            self.weight_index = max(self.WEIGHT_VALUES.keys())
+        self.weight_index = self.rotary_switch.current_value
         self.weight_display.transition(WeightDisplay.states.SHOW_WEIGHT)
 
 
