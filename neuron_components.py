@@ -60,12 +60,12 @@ class DendriteRotarySwitch(RotarySwitch):
     def update(self):
         new_value = self.debouncer.debounce(self.decode_switch())
         if (new_value > self.current_value or (new_value == 0 and self.current_value > 5)) and \
-                self.dendrite.WEIGHT_VALUES.get(new_value):
+                new_value in self.dendrite.WEIGHT_VALUES:
             print(f"dendrite rotary update: cur={self.current_value} new={new_value}")
             self.current_value = new_value
             self.dendrite.increase_weight()
         elif (new_value < self.current_value or (self.current_value == 0 and new_value > 5)) and \
-                self.dendrite.WEIGHT_VALUES.get(new_value):
+                new_value in self.dendrite.WEIGHT_VALUES:
             self.current_value = new_value
             self.dendrite.decrease_weight()
         else:
@@ -148,7 +148,7 @@ class Dendrite():
         2 : 2,
         3 : 3,
         4 : 4,
-        5 : None,
+        # no entry for 5
         6 : -4,
         7 : -3,
         8 : -2,

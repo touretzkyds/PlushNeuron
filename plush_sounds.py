@@ -53,6 +53,8 @@ DENDRITE_1_WEIGHT_INCREASE_SOUNDS = {
     1 : Sound("sounds/Transitions/organ_D-E_fade.ogg"),
     2 : Sound("sounds/Transitions/organ_E-F_fade.ogg"),
     3 : Sound("sounds/Transitions/organ_C-D_fade.ogg"),
+    4 : Sound("sounds/Transitions/organ_C-D_fade.ogg"),
+    6 : Sound("sounds/Transitions/organ_Ab-Gb_fade.ogg"),
     7 : Sound("sounds/Transitions/organ_Ab-Gb_fade.ogg"),
     8 : Sound("sounds/Transitions/organ_Bb-Ab_fade.ogg"),
     9 : Sound("sounds/Transitions/organ_C-Bb_fade.ogg")
@@ -64,6 +66,8 @@ DENDRITE_1_WEIGHT_DECREASE_SOUNDS = {
     1 : Sound("sounds/Transitions/organ_C-D_fade.ogg"),
     2 : Sound("sounds/Transitions/organ_D-E_fade.ogg"),
     3 : Sound("sounds/Transitions/organ_E-F_fade.ogg"),
+    4 : Sound("sounds/Transitions/organ_E-F_fade.ogg"),
+    6 : Sound("sounds/Transitions/organ_C-Bb_fade.ogg"),
     7 : Sound("sounds/Transitions/organ_C-Bb_fade.ogg"),
     8 : Sound("sounds/Transitions/organ_Ab-Gb_fade.ogg"),
     9 : Sound("sounds/Transitions/organ_Bb-Ab_fade.ogg")
