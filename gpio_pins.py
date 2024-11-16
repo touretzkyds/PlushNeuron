@@ -25,14 +25,26 @@ DENDRITE_3_ROTARY_PINS = [digitalio.DigitalInOut(board.D6),
 DENDRITE_3_BUTTON_PIN = digitalio.DigitalInOut(board.D19)
 DENDRITE_3_BARREL_PIN = digitalio.DigitalInOut(board.D20)
 
+# Threshold
+THRESHOLD_ROTARY_PINS = [digitalio.DigitalInOut(board.D2),
+                         digitalio.DigitalInOut(board.D3),
+		         digitalio.DigitalInOut(board.D14),
+                         digitalio.DigitalInOut(board.D15)]
+
+AXON_BARREL_PIN = digitalio.DigitalInOut(board.D21)
+
 # Initialize all pins
 
 input_pins = DENDRITE_1_ROTARY_PINS + DENDRITE_2_ROTARY_PINS + DENDRITE_3_ROTARY_PINS + \
     [DENDRITE_1_BUTTON_PIN, DENDRITE_2_BUTTON_PIN, DENDRITE_3_BUTTON_PIN] + \
-    [DENDRITE_1_BARREL_PIN, DENDRITE_2_BARREL_PIN, DENDRITE_3_BARREL_PIN]
+    [DENDRITE_1_BARREL_PIN, DENDRITE_2_BARREL_PIN, DENDRITE_3_BARREL_PIN] + \
+    THRESHOLD_ROTARY_PINS
+
+output_pins = [AXON_BARREL_PIN]
 
 def init_gpio():
     for pin in input_pins:
         pin.direction = digitalio.Direction.INPUT
         pin.pull = digitalio.Pull.UP
-    # init output pin for axon barrel connector
+    for pin in output_pins:
+        pin.direction = digitalio.Direction.OUTPUT

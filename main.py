@@ -1,11 +1,10 @@
 import time
 import datetime
-#import RPi.GPIO as GPIO
 
 import led_display
 import plush_sounds
 import gpio_pins
-from neuron_components import Dendrite
+from neuron_components import Dendrite, Axon, Soma
 
 dendrite1 = Dendrite("dendrite1", 0, \
                      gpio_pins.DENDRITE_1_ROTARY_PINS, \
@@ -34,13 +33,25 @@ dendrite3 = Dendrite("dendrite3", 2,\
 
 dendrites = [dendrite1, dendrite2, dendrite3]
 
+
+soma = Soma(dendrites,
+            gpio_pins.THRESHOLD_ROTARY_PINS,
+            led_display.ACTIVATION_LED_START_INDEX,
+            led_display.THRESHOLD_LED_START_INDEX,
+            plush_sounds.THRESHOLD_WEIGHT_CHANNEL,
+            plush_sounds.ACTIVATION_FIRE_CHANNEL)
+
+axon = Axon(soma,
+            gpio_pin.AXON_BARREL_PIN,
+            led_display.AXON_LED_START_INDEX)
+
 gpio_pins.init_gpio()
 led_display.init_leds()
 
 while True:
     for d in dendrites:
         d.update()
-    # update cell body
-    # update axon
+    soma.update()
+    axon.update()
     plush_sounds.update_all_channels()
     time.sleep(0.01)

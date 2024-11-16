@@ -22,9 +22,7 @@ channel_ids = [
     ACTIVATION_FIRE_CHANNEL
 ]
 
-#pygame.mixer.pre_init(buffer=44100)
 pygame.mixer.init()
-#pygame.mixer.init(4096, -16, 1, 1024)
 pygame.mixer.music.set_volume(0.9) #volume at 90%
 channels = [pygame.mixer.Channel(i) for i in channel_ids]
 
@@ -47,30 +45,32 @@ DENDRITE_1_WEIGHT_SOUNDS = {
 # -4  -3  -2 -1  0  1  2  3  4
 # B2 D#3 F#3 A3 C4 E4 G4 C5 E5
 
-# index is the starting value of the weight before increase
+# index is the starting value of the rotary switch before increase
 DENDRITE_1_WEIGHT_INCREASE_SOUNDS = {
-    0 : Sound("sounds/Transitions/organ_C-D_fade.ogg"),
-    1 : Sound("sounds/Transitions/organ_D-E_fade.ogg"),
-    2 : Sound("sounds/Transitions/organ_E-F_fade.ogg"),
-    3 : Sound("sounds/Transitions/organ_C-D_fade.ogg"),
-    4 : Sound("sounds/Transitions/organ_C-D_fade.ogg"),
-    6 : Sound("sounds/Transitions/organ_Ab-Gb_fade.ogg"),
-    7 : Sound("sounds/Transitions/organ_Ab-Gb_fade.ogg"),
-    8 : Sound("sounds/Transitions/organ_Bb-Ab_fade.ogg"),
-    9 : Sound("sounds/Transitions/organ_C-Bb_fade.ogg")
+    0 : Sound("sounds/Transitions/C4-E4.ogg"),
+    1 : Sound("sounds/Transitions/E4-G4.ogg"),
+    2 : Sound("sounds/Transitions/G4-C5.ogg"),
+    3 : Sound("sounds/Transitions/C5-E5.ogg"),
+    4 : Sound("sounds/organ_B2.ogg"),  # shouldn't need this
+    # 5 is not used
+    6 : Sound("sounds/Transitions/B2-D#3.ogg"),
+    7 : Sound("sounds/Transitions/D#3-F#3.ogg"),
+    8 : Sound("sounds/Transitions/F#3-A3.ogg"),
+    9 : Sound("sounds/Transitions/A3-C4.ogg")
 }
 
-# index is the starting value of the weight before decrease
+# index is the starting value of the rotary switch before decrease
 DENDRITE_1_WEIGHT_DECREASE_SOUNDS = {
-    0 : Sound("sounds/Transitions/organ_C-Bb_fade.ogg"),
-    1 : Sound("sounds/Transitions/organ_C-D_fade.ogg"),
-    2 : Sound("sounds/Transitions/organ_D-E_fade.ogg"),
-    3 : Sound("sounds/Transitions/organ_E-F_fade.ogg"),
-    4 : Sound("sounds/Transitions/organ_E-F_fade.ogg"),
-    6 : Sound("sounds/Transitions/organ_C-Bb_fade.ogg"),
-    7 : Sound("sounds/Transitions/organ_C-Bb_fade.ogg"),
-    8 : Sound("sounds/Transitions/organ_Ab-Gb_fade.ogg"),
-    9 : Sound("sounds/Transitions/organ_Bb-Ab_fade.ogg")
+    0 : Sound("sounds/Transitions/C4-A3.ogg"),
+    1 : Sound("sounds/Transitions/E4-C4.ogg"),
+    2 : Sound("sounds/Transitions/G4-E4.ogg"),
+    3 : Sound("sounds/Transitions/C5-G4.ogg"),
+    4 : Sound("sounds/Transitions/E5-C5.ogg"),
+    # 5 is not used
+    6 : Sound("sounds/organ_E5.ogg"), # shouldn't need this
+    7 : Sound("sounds/Transitions/D#3-B2.ogg"),
+    8 : Sound("sounds/Transitions/F#3-D#3.ogg"),
+    9 : Sound("sounds/Transitions/A3-F#3.ogg")
 }
 
 DENDRITE_2_WEIGHT_SOUNDS = DENDRITE_1_WEIGHT_SOUNDS
@@ -111,6 +111,10 @@ DENDRITE_BUTTON_SOUNDS = [
     DENDRITE_3_BUTTON_SOUND
 ]
 
+THRESHOLD_INCREASE_SOUNDS = {}
+
+THRESHOLD_DECREASE_SOUNDS = {}
+
 def queue_sound(sound, channel_id):
     # play sound if channel is free, else queue it for later
     if not channels[channel_id].get_busy():
@@ -131,17 +135,3 @@ def nothing_to_play():
         if sound_queues[id] or channels[id].get_busy():
             return False
     return True
-
-"""
-while True:
-    update_all_channels()
-    if nothing_to_play():
-        cmd = input("cmd? ")
-        for ch in cmd:
-            if ch == "a":
-                queue_sound(DENDRITE_1_BUTTON_SOUND, DENDRITE_1_BUTTON)
-            elif ch == "b":
-                queue_sound(DENDRITE_2_BUTTON_SOUND, DENDRITE_2_BUTTON)
-            else:
-                print(f"Unrecognized: '{ch}'")
-"""

@@ -12,8 +12,8 @@ NUM_PIXELS = NUM_DENDRITES * NUM_PIXELS_WEIGHT + \
 DENDRITE_1_LED_START_INDEX = 0
 DENDRITE_2_LED_START_INDEX = DENDRITE_1_LED_START_INDEX + NUM_PIXELS_WEIGHT
 DENDRITE_3_LED_START_INDEX = DENDRITE_2_LED_START_INDEX + NUM_PIXELS_WEIGHT
-NET_INPUT_LED_START_INDEX  = DENDRITE_3_LED_START_INDEX + NUM_PIXELS_WEIGHT
-THRESHOLD_LED_START_INDEX  = NET_INPUT_LED_START_INDEX + NUM_PIXELS_ACTIVATION
+ACTIVATION_LED_START_INDEX = DENDRITE_3_LED_START_INDEX + NUM_PIXELS_WEIGHT
+THRESHOLD_LED_START_INDEX  = ACTIVATION_LED_START_INDEX + NUM_PIXELS_ACTIVATION
 AXON_LED_START_INDEX       = THRESHOLD_LED_START_INDEX + NUM_PIXELS_THRESHOLD
 
 def init_leds():
@@ -66,6 +66,28 @@ THRESHOLD_ROTARY_COLORS = (
     (0, 0, 0, 0, 0, 1, 0, 0, 0), # 14 = red
     (0, 0, 0, 0, 0, 5, 0, 0, 0), # 15 = dim-red
 )
+
+ACTIVATION_COLORS = {
+    -9 : (1, 1, 1, 1, 1, 1, 1, 1, 1),
+    -8 : (0, 1, 1, 1, 1, 1, 1, 1, 1),
+    -7 : (0, 0, 1, 1, 1, 1, 1, 1, 1),
+    -6 : (0, 0, 0, 1, 1, 1, 1, 1, 1),
+    -5 : (0, 0, 0, 0, 1, 1, 1, 1, 1),
+    -4 : (0, 0, 0, 0, 0, 1, 1, 1, 1),
+    -3 : (0, 0, 0, 0, 0, 1, 1, 1, 0),
+    -2 : (0, 0, 0, 0, 0, 1, 1, 0, 0),
+    -1 : (0, 0, 0, 0, 0, 1, 0, 0, 0),
+     0 : (0, 0, 0, 0, 3, 0, 0, 0, 0),
+     1 : (0, 0, 0, 2, 0, 0, 0, 0, 0),
+     2 : (0, 0, 2, 2, 0, 0, 0, 0, 0),
+     3 : (0, 2, 2, 2, 0, 0, 0, 0, 0),
+     4 : (2, 2, 2, 2, 0, 0, 0, 0, 0),
+     5 : (2, 2, 2, 2, 2, 0, 0, 0, 0),
+     6 : (2, 2, 2, 2, 2, 2, 0, 0, 0),
+     7 : (2, 2, 2, 2, 2, 2, 2, 0, 0),
+     8 : (2, 2, 2, 2, 2, 2, 2, 2, 0),
+     9 : (2, 2, 2, 2, 2, 2, 2, 2, 2)
+}
 
 def display_pattern(pattern, led_start_index):
     for i in range(len(pattern)):

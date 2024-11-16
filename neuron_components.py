@@ -34,7 +34,7 @@ class Debouncer():
                 self.new_time = t
         return self.current_value
 
-
+################ Rotary Switches ################
 
 class RotarySwitch():
     def __init__(self, name, gpio_pins):
@@ -61,7 +61,6 @@ class DendriteRotarySwitch(RotarySwitch):
         new_value = self.debouncer.debounce(self.decode_switch())
         if (new_value > self.current_value or (new_value == 0 and self.current_value > 5)) and \
                 new_value in self.dendrite.WEIGHT_VALUES:
-            print(f"dendrite rotary update: cur={self.current_value} new={new_value}")
             self.current_value = new_value
             self.dendrite.increase_weight()
         elif (new_value < self.current_value or (self.current_value == 0 and new_value > 5)) and \
@@ -72,10 +71,16 @@ class DendriteRotarySwitch(RotarySwitch):
             pass  # ignored switch position
 
         
-class BodyRotarySwitch(RotarySwitch):
-    # fill this in later
-    pass
+class ThresholdRotarySwitch(RotarySwitch):
+    def __init__(self, gpio_pins):
+        super().__init__('threshold switch', gpio_pins)
 
+    def update(self):
+        new_value = self.debouncer.debounce(self.decode_switch())
+        # ... fill in the rest
+
+
+################ Buttons and Barrel Connectors ################
 
 class Button(StateMachine):
     states = Enum('ButtonStates', [('BUTTON_OFF', 1), ('BUTTON_ON', 2)])
@@ -109,6 +114,7 @@ class Button(StateMachine):
         self.transition(self.states.BUTTON_OFF)
 
 
+################ LED Displays ################
 
 class LEDDisplay(StateMachine):
     def __init__(self, name, states, led_start_index):
@@ -142,6 +148,23 @@ class WeightDisplay(LEDDisplay):
             pass
 
 
+class ThresholdDisplay(LEDDisplay):
+    states = Enum('ThresholdDisplayStates', [('IDLE', 1)])
+
+    def __init__(self, soma, led_start_index):
+        super().__init__('ThresholdDisplay', self.states, led_start_index)
+        self.soma = soma
+
+    def update(self):
+        super().update()
+        display_pattern(THRESHOLD_ROTARY_COLORS[self.soma.threshold_index], self.led_start_index)
+
+
+class ActivationDisplay(LEDDisplay):
+    pass
+
+################ Neuron Components ################
+
 class Dendrite():
     WEIGHT_VALUES = { # 10 position switch
         0 : 0,
@@ -160,7 +183,7 @@ class Dendrite():
                  led_start_index, rotary_audio_channel, button_audio_channel):
         self.name = name
         self.dendrite_index = dendrite_index
-        self.rotary_switch = DendriteRotarySwitch(self, name, rotary_gpio_pins)
+        self.rotary_switch = DendriteRotarySwitch(self, f"{name} switch", rotary_gpio_pins)
         self.button = Button(self, button_gpio_pin, barrel_gpio_pin)
         self.weight_display = WeightDisplay(self, led_start_index)
         self.rotary_audio_channel = rotary_audio_channel
@@ -186,4 +209,50 @@ class Dendrite():
         self.weight_display.transition(WeightDisplay.states.SHOW_WEIGHT)
 
 
+
+class Soma(StateMachine):
+    THRESHOLD_VALUES = { # 16 position switch
+         0 : 0.0,
+         1 : 0.5,
+         2 : 1.0,
+         3 : 1.5,
+         4 : 2.0,
+         5 : 2.5,
+         6 : 3.0,
+         7 : 3.5,
+         # no entry for 8
+         9 : -3.5,
+        10 : -3.0,
+        11 : -2.5,
+        12 : -2.0,
+        13 : -1.5,
+        14 : -1.0,
+        15 : -0.5
+    }
+
+    def __init__(self, dendrites, threshold_gpio_pins,
+                 activation_led_start_index, threshold_led_start_index,
+                 activation_weight_channel, activation_fire_channel):
+        self.dendrites = dendrites
+        self.activation_led_start_index = activation_led_start_index
+        self.threshold_led_start_index = threshold_led_start_index
+        self.activation_weight_channel = activation_weight_channel
+        self.activation_fire_channel = activation_fire_channel
+        self.rotary_switch = ThresholdRotarySwitch(threshold_gpio_pins)
+
+    def update(self):
+        super().update()
+        self.rotary_switch.update()
+        # compute net input
+        # update net activation display
+
+
+class Axon(StateMachine):
+    states = Enum('AxonStates', [('IDLE', 1), ('FLASH_ON', 2), ('FLASH_OFF', 3), ('SHUTDOWN', 4)])
+
+    def __init__(self, soma, barrel_pin, led_start_index):
+        super().__init__('axon', states)
+        self.soma = soma
+        self.barrel_pin = barrel_pin
+        self.led_start_index = led_start_index
 
