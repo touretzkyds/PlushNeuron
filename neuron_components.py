@@ -56,15 +56,18 @@ class DendriteRotarySwitch(RotarySwitch):
     def __init__(self, dendrite, name, gpio_pins):
         super().__init__(name, gpio_pins)
         self.dendrite = dendrite
+        self.midpoint = floor(0.5 + max(self.dendrite.WEIGHT_VALUES.keys()))
 
     def update(self):
         new_value = self.debouncer.debounce(self.decode_switch())
-        if (new_value > self.current_value or (new_value == 0 and self.current_value > 5)) and \
-                new_value in self.dendrite.WEIGHT_VALUES:
+        if ((new_value > self.current_value or \
+             (new_value == 0 and self.current_value > self.midpoint)) and \
+           new_value in self.dendrite.WEIGHT_VALUES:
             self.current_value = new_value
             self.dendrite.increase_weight()
-        elif (new_value < self.current_value or (self.current_value == 0 and new_value > 5)) and \
-                new_value in self.dendrite.WEIGHT_VALUES:
+        elif (new_value < self.current_value or \
+              (self.current_value == 0 and new_value > self.midpoint)) and \
+             new_value in self.dendrite.WEIGHT_VALUES:
             self.current_value = new_value
             self.dendrite.decrease_weight()
         else:

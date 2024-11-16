@@ -111,6 +111,15 @@ DENDRITE_BUTTON_SOUNDS = [
     DENDRITE_3_BUTTON_SOUND
 ]
 
+# Tones for dendrite weights:
+# -4  -3  -2 -1  0  1  2  3  4
+# B2 D#3 F#3 A3 C4 E4 G4 C5 E5
+
+
+# Tones for threshold weights:
+# -3.5  -3.0  -2.5  -2.0  -1.5  -1.0  -0.5  0.0  0.5  1.0  1.5  2.0  2.5  3.0  3.5
+#  C3    D3    E3    F3    G3    A3    B3   C4   D4   E4   F4   G4   A#4  C5   D5
+
 THRESHOLD_INCREASE_SOUNDS = {}
 
 THRESHOLD_DECREASE_SOUNDS = {}
