@@ -60,7 +60,7 @@ class DendriteRotarySwitch(RotarySwitch):
 
     def update(self):
         new_value = self.debouncer.debounce(self.decode_switch())
-        if ((new_value > self.current_value or \
+        if (new_value > self.current_value or \
              (new_value == 0 and self.current_value > self.midpoint)) and \
            new_value in self.dendrite.WEIGHT_VALUES:
             self.current_value = new_value
@@ -164,7 +164,17 @@ class ThresholdDisplay(LEDDisplay):
 
 
 class ActivationDisplay(LEDDisplay):
-    pass
+    states = Enum('ActivationDisplayStates', [('IDLE', 1)])
+
+    def __init__(self, soma, led_start_index):
+        super().__init__('ActivationDisplay', self.states, led_start_index)
+        self.soma = soma
+
+    def update(self):
+        super().update()
+        activation = self.soma.current_activation
+        display_pattern(ACTIVATION_COLORS[activation], self.led_start_index)
+
 
 ################ Neuron Components ################
 
@@ -237,17 +247,20 @@ class Soma(StateMachine):
                  activation_led_start_index, threshold_led_start_index,
                  activation_weight_channel, activation_fire_channel):
         self.dendrites = dendrites
-        self.activation_led_start_index = activation_led_start_index
-        self.threshold_led_start_index = threshold_led_start_index
+        self.rotary_switch = ThresholdRotarySwitch(threshold_gpio_pins)
+        self.activation_display = ActivationDisplay(self, activation_led_start_index)
+        self.threshold_display = ThresholdDisplay(self, threshold_led_start_index)
         self.activation_weight_channel = activation_weight_channel
         self.activation_fire_channel = activation_fire_channel
-        self.rotary_switch = ThresholdRotarySwitch(threshold_gpio_pins)
 
     def update(self):
         super().update()
         self.rotary_switch.update()
-        # compute net input
+        # compute activation
+        new_activation = sum([d.WEIGHT_VALUES[d.weight_index] for d in self.dendrites])
         # update net activation display
+        # decide if we should fire
+        threshold = self.THRESHOLD_VALUES[self.rotary_switch.current_value]
 
 
 class Axon(StateMachine):
