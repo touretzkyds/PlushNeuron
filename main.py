@@ -34,16 +34,15 @@ dendrite3 = Dendrite("dendrite3", 2,\
 dendrites = [dendrite1, dendrite2, dendrite3]
 
 
-soma = Soma(dendrites,
+axon = Axon(gpio_pin.AXON_BARREL_PIN,
+            led_display.AXON_LED_START_INDEX)
+
+soma = Soma(dendrites, axon,
             gpio_pins.THRESHOLD_ROTARY_PINS,
             led_display.ACTIVATION_LED_START_INDEX,
             led_display.THRESHOLD_LED_START_INDEX,
             plush_sounds.THRESHOLD_WEIGHT_CHANNEL,
             plush_sounds.ACTIVATION_FIRE_CHANNEL)
-
-axon = Axon(soma,
-            gpio_pin.AXON_BARREL_PIN,
-            led_display.AXON_LED_START_INDEX)
 
 gpio_pins.init_gpio()
 led_display.init_leds()

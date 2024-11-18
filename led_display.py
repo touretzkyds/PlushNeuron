@@ -29,7 +29,9 @@ RGB_COLORS = (
     (  0, 255,   0),  # 2 - green
     (  0,   0, 255),  # 3 - blue
     (128,   0,   0),  # 4 - dim-red
-    (  0, 128,   0)   # 5 - dim-green
+    (  0, 128,   0),  # 5 - dim-green
+    (  0,   0, 128),  # 6 - dim-blue (currently unused)
+    (128, 128, 128)   # 7 - white
 )
 
 DENDRITE_ROTARY_COLORS = (
@@ -88,6 +90,10 @@ ACTIVATION_COLORS = {
      8 : (2, 2, 2, 2, 2, 2, 2, 2, 0),
      9 : (2, 2, 2, 2, 2, 2, 2, 2, 2)
 }
+
+AXON_BLANK_PATTERN = (0,) * NUM_PIXELS_AXON
+
+AXON_FIRING_PATTERN = (7,) * NUM_PIXELS_AXON
 
 def display_pattern(pattern, led_start_index):
     for i in range(len(pattern)):
