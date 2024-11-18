@@ -199,10 +199,34 @@ class ActivationDisplay(LEDDisplay):
 
 
 class AxonDisplay(LEDDisplay):
-    states = Enum('AxonDisplayStates', [('IDLE', 1), ('FLASH_ON', 2), ('FLASH_OFF', 3)])
+    FLASH_ON_DURATION = 200
+    FLASH_OFF_DURATION = 100
 
-    def __init__(self, led_start_index):
+    states = Enum('AxonStates', [('IDLE', 1), ('FIRE', 2), ('FLASH_ON', 3), ('FLASH_OFF', 4), ('SHUTDOWN', 5)])
+
+
+    def __init__(self, axon, led_start_index):
         super().__init__('AxonDisplay', self.states, led_start_index)
+        self.axon = axon
+
+    def update(self):
+        t = now_msecs()
+        if self.current_state == self.states.FIRE:
+            display_pattern(AXON_FIRING_PATTERN, self.led_start_index)
+            self.transition(self.states.FLASH_ON)
+        elif self.current_state == self.states.FLASH_ON:
+            if self.state_duration >= self.FLASH_ON_DURATION:
+                display_pattern(AXON_BLANK_PATTERN, self.led_start_index)
+                self.transition(self.states.FLASH_OFF)
+        elif self.current_state == self.states.FLASH_OFF:
+            if self.state_duration >= self.FLASH_OFF_DURATION:
+                display_pattern(AXON_FIRING_PATTERN, self.led_start_index)
+                self.transition(self.states.FLASH_ON)
+        elif self.current_state == self.states.SHUTDOWN:
+            display_pattern(AXON_BLANK_PATTERN, self.led_start_index)
+            self.transition(self.states.IDLE)
+        else: # idle
+            pass
 
 
 ################ Neuron Components ################
@@ -315,38 +339,27 @@ class Soma(StateMachine):
 
 
 class Axon(StateMachine):
-    FLASH_ON_DURATION = 200
-    FLASH_OFF_DURATION = 100
     AXON_FIRING_DURATION = 2000
 
-    states = Enum('AxonStates', [('IDLE', 1), ('FIRE', 2), ('FLASH_ON', 3), ('FLASH_OFF', 4), ('SHUTDOWN', 5)])
+    states = Enum('AxonStates', [('IDLE', 1), ('FIRE', 2), ('FIRING', 3)])
 
     def __init__(self, barrel_pin, led_start_index):
         super().__init__('axon', states)
         self.barrel_pin = barrel_pin
-        self.led_start_index = led_start_index
+        self.axon_display = AxonDisplay(self, led_start_index)
         self.firing_start_time = -1
 
     def update(self):
         t = now_msecs()
         if self.current_state == self.states.FIRE:
             self.firing_start_time = t
-            display_pattern(AXON_FIRING_PATTERN, self.led_start_index)
-            self.transition(self.states.FLASH_ON)
-        elif self.current_state == self.states.FLASH_ON:
-            if t - self.firing_start_time > self.AXON_FIRING_DURATION:
-                self.transition(self.states.SHUTDOWN)
-            elif self.state_duration >= self.FLASH_ON_DURATION:
-                display_pattern(AXON_BLANK_PATTERN, self.led_start_index)
-                self.transition(self.states.FLASH_OFF)
-        elif self.current_state == self.states.FLASH_OFF:
-            if t - self.firing_start_time > self.AXON_FIRING_DURATION:
-                self.transition(self.states.SHUTDOWN)
-            elif self.state_duration >= self.FLASH_OFF_DURATION:
-                display_pattern(AXON_FIRING_PATTERN, self.led_start_index)
-                self.transition(self.states.FLASH_ON)
-        elif self.current_state == self.states.SHUTDOWN:
-            display_pattern(AXON_BLANK_PATTERN, self.led_start_index)
+            self.barrel_pin.value = True
+            self.axon_display.transition(self.axon_display.states.FIRE)
+            self.transition(self.states.FIRING)
+        elif self.current_state == self.states.FIRING and \
+             (t - self.firing_start_time) > self.AXON_FIRING_DURATION:
+            self.axon_display.transition(self.axon_display.states.SHUTDOWN)
+            self.barrel_pin.value = False
             self.transition(self.states.IDLE)
         else: # idle
             pass
