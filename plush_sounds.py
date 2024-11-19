@@ -67,10 +67,10 @@ DENDRITE_1_WEIGHT_DECREASE_SOUNDS = {
     3 : Sound("sounds/weight-transitions/C5-G4.ogg"),
     4 : Sound("sounds/weight-transitions/E5-C5.ogg"),
     # 5 is not used
-    6 : Sound("sounds/organ_E5.ogg"), # shouldn't need this
-    7 : Sound("sounds/weight-transitions/D#3-B2.ogg"),
-    8 : Sound("sounds/weight-transitions/F#3-D#3.ogg"),
-    9 : Sound("sounds/weight-transitions/A3-F#3.ogg")
+    6 : Sound("sounds/weight-transitions/D#3-B2.ogg"), # shouldn't need this
+    7 : Sound("sounds/weight-transitions/F#3-D#3.ogg"),
+    8 : Sound("sounds/weight-transitions/A3-F#3.ogg"),
+    9 : Sound("sounds/weight-transitions/C4-A3.ogg")
 }
 
 DENDRITE_2_WEIGHT_SOUNDS = DENDRITE_1_WEIGHT_SOUNDS
@@ -130,7 +130,9 @@ THRESHOLD_INCREASE_SOUNDS = {
      5 : Sound("sounds/threshold-transitions/A#4-C5.ogg"),  #  2.5
      6 : Sound("sounds/threshold-transitions/C5-D5.ogg"),   #  3.0
      # 7 is a valid weight but no increase transition
+     7 : Sound("shutter16.wav"),
      # 8 is not used
+     8 : Sound("shutter16.wav"),
      9 : Sound("sounds/threshold-transitions/C3-D3.ogg"),   # -3.5
     10 : Sound("sounds/threshold-transitions/D3-E3.ogg"),   # -3.0
     11 : Sound("sounds/threshold-transitions/E3-F3.ogg"),   # -2.5
@@ -151,7 +153,9 @@ THRESHOLD_DECREASE_SOUNDS = {
      6 : Sound("sounds/threshold-transitions/C5-A#4.ogg"),  #  3.0
      7 : Sound("sounds/threshold-transitions/D5-C5.ogg"),   #  3.5
      # 8 is not used
+     8 : Sound("shutter16.wav"),
      # 9 is a valid weight but no decrease transition
+     9 : Sound("shutter16.wav"),
     10 : Sound("sounds/threshold-transitions/D3-C3.ogg"),   # -3.0
     11 : Sound("sounds/threshold-transitions/E3-D3.ogg"),   # -2.5
     12 : Sound("sounds/threshold-transitions/F3-E3.ogg"),   # -2.0

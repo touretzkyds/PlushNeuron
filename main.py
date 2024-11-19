@@ -34,7 +34,7 @@ dendrite3 = Dendrite("dendrite3", 2,\
 dendrites = [dendrite1, dendrite2, dendrite3]
 
 
-axon = Axon(gpio_pin.AXON_BARREL_PIN,
+axon = Axon(gpio_pins.AXON_BARREL_PIN,
             led_display.AXON_LED_START_INDEX)
 
 soma = Soma(dendrites, axon,
