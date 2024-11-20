@@ -35,7 +35,8 @@ dendrites = [dendrite1, dendrite2, dendrite3]
 
 
 axon = Axon(gpio_pins.AXON_BARREL_PIN,
-            led_display.AXON_LED_START_INDEX)
+            led_display.AXON_LED_START_INDEX,
+            plush_sounds.ACTIVATION_FIRE_CHANNEL)
 
 soma = Soma(dendrites, axon,
             gpio_pins.THRESHOLD_ROTARY_PINS,

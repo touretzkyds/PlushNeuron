@@ -6,7 +6,7 @@ from state_machine import StateMachine, now_msecs
 from led_display import display_pattern, DENDRITE_ROTARY_COLORS, DENDRITE_ROTARY_BLANK, \
     THRESHOLD_ROTARY_COLORS, ACTIVATION_COLORS, AXON_BLANK_PATTERN, AXON_FIRING_PATTERN
 from plush_sounds import queue_sound, WEIGHT_SOUNDS, WEIGHT_INCREASE_SOUNDS, WEIGHT_DECREASE_SOUNDS, \
-    THRESHOLD_INCREASE_SOUNDS, THRESHOLD_DECREASE_SOUNDS
+    THRESHOLD_INCREASE_SOUNDS, THRESHOLD_DECREASE_SOUNDS, AXON_FIRE_SOUND
 
 """
 **** TREAT ZERO VALUE DIFFERENTLY FOR ROTARY SWITCHES ****
@@ -59,18 +59,19 @@ class DendriteRotarySwitch(RotarySwitch):
     def __init__(self, dendrite, name, gpio_pins):
         super().__init__(name, gpio_pins)
         self.dendrite = dendrite
-        self.midpoint = floor(0.5 + max(self.dendrite.WEIGHT_VALUES.keys())/2)
+        # midpoint will be 5 for a 10-position switch
+        self.midpoint = floor(0.6 + max(self.dendrite.WEIGHT_VALUES.keys())/2)
 
     def update(self):
         new_value = self.debouncer.debounce(self.decode_switch())
-        if (new_value > self.current_value or \
-             (new_value == 0 and self.current_value > self.midpoint)) and \
-           new_value in self.dendrite.WEIGHT_VALUES:
+        if (0 <= self.current_value < new_value < self.midpoint) or \
+           (self.midpoint < self.current_value < new_value) or \
+           (new_value < self.midpoint < self.current_value):
             self.current_value = new_value
             self.dendrite.increase_weight()
-        elif (new_value < self.current_value or \
-              (self.current_value == 0 and new_value > self.midpoint)) and \
-             new_value in self.dendrite.WEIGHT_VALUES:
+        elif (0 <= new_value < self.current_value < self.midpoint) or \
+             (self.midpoint < new_value < self.current_value) or \
+             (self.current_value < self.midpoint < new_value):
             self.current_value = new_value
             self.dendrite.decrease_weight()
         else:
@@ -81,18 +82,19 @@ class ThresholdRotarySwitch(RotarySwitch):
     def __init__(self, soma, gpio_pins):
         super().__init__('threshold switch', gpio_pins)
         self.soma = soma
-        self.midpoint = floor(0.5 + max(self.soma.THRESHOLD_VALUES.keys())/2)
+        # midpoint will be 8 for a 16-position switch
+        self.midpoint = floor(0.6 + max(self.soma.THRESHOLD_VALUES.keys())/2)
 
     def update(self):
         new_value = self.debouncer.debounce(self.decode_switch())
-        if (new_value > self.current_value or \
-             (new_value == 0 and self.current_value > self.midpoint)) and \
-           new_value in self.soma.THRESHOLD_VALUES:
+        if (0 <= self.current_value < new_value < self.midpoint) or \
+           (self.midpoint < self.current_value < new_value) or \
+           (new_value < self.midpoint < self.current_value):
             self.current_value = new_value
             self.soma.increase_threshold()
-        elif (new_value < self.current_value or \
-              (self.current_value == 0 and new_value > self.midpoint)) and \
-             new_value in self.soma.THRESHOLD_VALUES:
+        elif (0 <= new_value < self.current_value < self.midpoint) or \
+             (self.midpoint < new_value < self.current_value) or \
+             (self.current_value < self.midpoint < new_value):
             self.current_value = new_value
             self.soma.decrease_threshold()
         else:
@@ -104,11 +106,12 @@ class ThresholdRotarySwitch(RotarySwitch):
 class Button(StateMachine):
     states = Enum('ButtonStates', [('BUTTON_OFF', 1), ('BUTTON_ON', 2)])
     
-    def __init__(self, dendrite, button_gpio_pin, barrel_gpio_pin):
+    def __init__(self, dendrite, button_gpio_pin, barrel_gpio_pin, button_audio_channel):
         super().__init__(f"Button {dendrite.dendrite_index}", self.states)
         self.dendrite = dendrite
         self.button_gpio_pin = button_gpio_pin
         self.barrel_gpio_pin = barrel_gpio_pin
+        self.button_audio_channel = button_audio_channel
         self.debouncer = Debouncer(Debouncer.BUTTON_PERSISTENCE_TIME)
         self.current_value = 0
 
@@ -121,20 +124,17 @@ class Button(StateMachine):
             self.button_pressed()
         elif new_value > self.current_value:
             self.button_released()
-        self.current_value = new_value
 
     def button_pressed(self):
-        # need to play a sound
-        pass
-        # weight display was on, so turn it off to indicate start of button effect
-        self.dendrite.weight_display.transition(WeightDisplay.states.FLASH_OFF)
+        self.current_value = 1
+        sound = WEIGHT_SOUNDS[self.dendrite.dendrite_index][self.dendrite.weight_index]
+        queue_sound(sound, self.button_audio_channel)
+        self.dendrite.weight_display.transition(WeightDisplay.states.START_FLASH)
         self.transition(self.states.BUTTON_ON)
 
     def button_released(self):
-        # need to play a sound
-        pass
-        # done flashing; make weight display be steady on
-        self.dendrite.weight_display.transition(WeightDisplay.states.SHOW_WEIGHT)
+        self.current_value = 0
+        self.dendrite.weight_display.finish_flash()
         self.transition(self.states.BUTTON_OFF)
 
 
@@ -149,27 +149,39 @@ class LEDDisplay(StateMachine):
 class WeightDisplay(LEDDisplay):
     FLASH_ON_DURATION = 200
     FLASH_OFF_DURATION = 100
-    states = Enum('WeightDisplayStates', [('IDLE', 1), ('FLASH_OFF', 2), ('FLASH_ON', 3), ('SHOW_WEIGHT', 4)])
+    FLASH_MINIMUM_TIME = 2000
+    
+    states = Enum('WeightDisplayStates', [('IDLE', 1), ('START_FLASH'), ('FLASH_OFF', 2), ('FLASH_ON', 3), ('SHOW_WEIGHT', 4)])
 
     def __init__(self, dendrite, led_start_index):
         super().__init__(f"WeightDisplay {dendrite.dendrite_index}", self.states, led_start_index)
         self.dendrite = dendrite
+        self.flash_start_time = -1
+        self.flash_finish_requested = False
 
     def update(self):
         super().update()
-        if self.current_state == self.states.FLASH_ON and self.state_duration >= self.FLASH_ON_DURATION:
+        t = now_msecs()
+        if self.current_state == self.states.START_FLASH:
+            self.flash_start_time = t
+            self.flash_finish_requested = False
+        elif self.flash_stop_requested and (t - self.flash_start_time) > self.FLASH_MINIMUM_TIME:
+            self.transition(self.states.SHOW_WEIGHT)
+        elif self.current_state == self.states.START_FLASH or \
+           (self.current_state == self.states.FLASH_ON and self.state_duration >= self.FLASH_ON_DURATION):
             display_pattern(DENDRITE_ROTARY_BLANK, self.led_start_index)
             self.transition(self.states.FLASH_OFF)
         elif self.current_state == self.states.FLASH_OFF and self.state_duration >= self.FLASH_OFF_DURATION:
-            weight_index = self.dendrite.weight_index
             display_pattern(DENDRITE_ROTARY_COLORS[self.dendrite.weight_index], self.led_start_index)
             self.transition(self.states.FLASH_ON)
         elif self.current_state == self.states.SHOW_WEIGHT:
-            weight_index = self.dendrite.weight_index
             display_pattern(DENDRITE_ROTARY_COLORS[self.dendrite.weight_index], self.led_start_index)
             self.transition(self.states.IDLE)
         else:
             pass
+
+    def finish_flash(self):
+        self.flash_finish_requested = True
 
 
 class ThresholdDisplay(LEDDisplay):
@@ -192,18 +204,21 @@ class ActivationDisplay(LEDDisplay):
     def __init__(self, soma, led_start_index):
         super().__init__('ActivationDisplay', self.states, led_start_index)
         self.soma = soma
+        self.current_value = None
 
     def update(self):
         super().update()
         activation = self.soma.current_activation
-        display_pattern(ACTIVATION_COLORS[activation], self.led_start_index)
+        if self.current_value != activation:
+            self.current_value = activation
+            display_pattern(ACTIVATION_COLORS[activation], self.led_start_index)
 
 
 class AxonDisplay(LEDDisplay):
     FLASH_ON_DURATION = 200
     FLASH_OFF_DURATION = 100
 
-    states = Enum('AxonStates', [('IDLE', 1), ('FIRE', 2), ('FLASH_ON', 3), ('FLASH_OFF', 4), ('SHUTDOWN', 5)])
+    states = Enum('AxonStates', [('IDLE', 1), ('START_FLASH', 2), ('FLASH_ON', 3), ('FLASH_OFF', 4), ('SHUTDOWN', 5)])
 
 
     def __init__(self, axon, led_start_index):
@@ -212,7 +227,7 @@ class AxonDisplay(LEDDisplay):
 
     def update(self):
         t = now_msecs()
-        if self.current_state == self.states.FIRE:
+        if self.current_state == self.states.START_FLASH:
             display_pattern(AXON_FIRING_PATTERN, self.led_start_index)
             self.transition(self.states.FLASH_ON)
         elif self.current_state == self.states.FLASH_ON:
@@ -251,16 +266,20 @@ class Dendrite():
         self.name = name
         self.dendrite_index = dendrite_index
         self.rotary_switch = DendriteRotarySwitch(self, f"{name} switch", rotary_gpio_pins)
-        self.button = Button(self, button_gpio_pin, barrel_gpio_pin)
+        self.button = Button(self, button_gpio_pin, barrel_gpio_pin, button_audio_channel)
         self.weight_display = WeightDisplay(self, led_start_index)
         self.rotary_audio_channel = rotary_audio_channel
-        self.button_audio_channel = button_audio_channel
         self.weight_index = 0
+        self.transmitted_value = 0
 
     def update(self):
         self.rotary_switch.update()
         self.button.update()
         self.weight_display.update()
+        if self.button.current_value == 1:
+            self.transmitted_value = self.WEIGHT_VALUES[self.weight_index]
+        else:
+            self.transmitted_value = 0
 
     def increase_weight(self):
         print(f"increase: dendrite {self.dendrite_index} weight index {self.weight_index} will become {self.rotary_switch.current_value}")
@@ -306,7 +325,7 @@ class Soma(StateMachine):
         super().__init__('SomaMachine', self.states)
         self.dendrites = dendrites
         self.axon = axon
-        self.rotary_switch = ThresholdRotarySwitch(self,threshold_gpio_pins)
+        self.rotary_switch = ThresholdRotarySwitch(self, threshold_gpio_pins)
         self.activation_display = ActivationDisplay(self, activation_led_start_index)
         self.threshold_display = ThresholdDisplay(self, threshold_led_start_index)
         self.rotary_audio_channel = rotary_audio_channel
@@ -318,16 +337,15 @@ class Soma(StateMachine):
         super().update()
         self.rotary_switch.update()
         # compute activation
-        new_activation = sum([d.WEIGHT_VALUES[d.weight_index] for d in self.dendrites])
+        new_activation = sum([d.transmitted_value for d in self.dendrites])
         # update activation display -- should have an animation here
         self.current_activation = new_activation
         self.activation_display.update()
         # decide if we should fire
         threshold = self.THRESHOLD_VALUES[self.rotary_switch.current_value]
         if new_activation > threshold:
-            #print(f"activation {new_activation} > threshold {threshold}: FIRE!")
-            pass # play fire sound
-            self.axon.transition(self.axon.states.FIRE)
+            print(f"activation {new_activation} > threshold {threshold}: FIRE!")
+            self.axon.maybe_fire()
 
     def increase_threshold(self):
         sound = THRESHOLD_INCREASE_SOUNDS[self.threshold_index]
@@ -348,18 +366,24 @@ class Axon(StateMachine):
 
     states = Enum('AxonStates', [('IDLE', 1), ('FIRE', 2), ('FIRING', 3)])
 
-    def __init__(self, barrel_pin, led_start_index):
+    def __init__(self, barrel_pin, led_start_index, activation_fire_channel):
         super().__init__('axon', self.states)
+        self.activation_fire_channel = activation_fire_channel
         self.barrel_pin = barrel_pin
         self.axon_display = AxonDisplay(self, led_start_index)
         self.firing_start_time = -1
+
+    def maybe_fire(self):
+        if self.current_state == self.states.IDLE:
+            self.transition(self.states.FIRE)
 
     def update(self):
         t = now_msecs()
         if self.current_state == self.states.FIRE:
             self.firing_start_time = t
             self.barrel_pin.value = True
-            self.axon_display.transition(self.axon_display.states.FIRE)
+            self.axon_display.transition(self.axon_display.states.START_FLASH)
+            queue_sound(AXON_FIRE_SOUND, self.activation_fire_channel)
             self.transition(self.states.FIRING)
         elif self.current_state == self.states.FIRING and \
              (t - self.firing_start_time) > self.AXON_FIRING_DURATION:

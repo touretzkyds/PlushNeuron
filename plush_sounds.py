@@ -34,6 +34,7 @@ DENDRITE_1_WEIGHT_SOUNDS = {
     2 : Sound("sounds/organ_G4.ogg"),   # +2
     3 : Sound("sounds/organ_C5.ogg"),   # +3
     4 : Sound("sounds/organ_E5.ogg"),   # +4
+    # 5 is not used
     6 : Sound("sounds/organ_B2.ogg"),   # -4
     7 : Sound("sounds/organ_D#3.ogg"),  # -3
     8 : Sound("sounds/organ_F#3.ogg"),  # -2
@@ -68,9 +69,9 @@ DENDRITE_1_WEIGHT_DECREASE_SOUNDS = {
     4 : Sound("sounds/weight-transitions/E5-C5.ogg"),
     # 5 is not used
     6 : Sound("sounds/weight-transitions/D#3-B2.ogg"), # shouldn't need this
-    7 : Sound("sounds/weight-transitions/F#3-D#3.ogg"),
-    8 : Sound("sounds/weight-transitions/A3-F#3.ogg"),
-    9 : Sound("sounds/weight-transitions/C4-A3.ogg")
+    7 : Sound("sounds/weight-transitions/D#3-B2.ogg"),
+    8 : Sound("sounds/weight-transitions/F#3-D#3.ogg"),
+    9 : Sound("sounds/weight-transitions/A3-F#3.ogg")
 }
 
 DENDRITE_2_WEIGHT_SOUNDS = DENDRITE_1_WEIGHT_SOUNDS
@@ -163,6 +164,8 @@ THRESHOLD_DECREASE_SOUNDS = {
     14 : Sound("sounds/threshold-transitions/A3-G3.ogg"),   # -1.0
     15 : Sound("sounds/threshold-transitions/B3-A3.ogg")    # -0.5
 }
+
+AXON_FIRE_SOUND = Sound("sounds/8-bit-laser.ogg")
 
 def queue_sound(sound, channel_id):
     # play sound if channel is free, else queue it for later
