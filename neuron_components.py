@@ -113,27 +113,30 @@ class Button(StateMachine):
         self.barrel_gpio_pin = barrel_gpio_pin
         self.button_audio_channel = button_audio_channel
         self.debouncer = Debouncer(Debouncer.BUTTON_PERSISTENCE_TIME)
-        self.current_value = 0
+        self.current_value = 1
 
     def update(self):
         super().update()
         # not handling the barrel connector for now, just the button
         new_value = self.debouncer.debounce(self.button_gpio_pin.value + 0)
         # button is pressed when pin pulled down to 0
+        #print(f"Button current={self.current_value} new={new_value}")
         if new_value < self.current_value:
             self.button_pressed()
         elif new_value > self.current_value:
             self.button_released()
 
     def button_pressed(self):
-        self.current_value = 1
+        print(f"Button pressed: {self} {self.dendrite}")
+        self.current_value = 0
         sound = WEIGHT_SOUNDS[self.dendrite.dendrite_index][self.dendrite.weight_index]
         queue_sound(sound, self.button_audio_channel)
         self.dendrite.weight_display.transition(WeightDisplay.states.START_FLASH)
         self.transition(self.states.BUTTON_ON)
 
     def button_released(self):
-        self.current_value = 0
+        print(f"Button released: {self} {self.dendrite}")
+        self.current_value = 1
         self.dendrite.weight_display.finish_flash()
         self.transition(self.states.BUTTON_OFF)
 
@@ -151,7 +154,8 @@ class WeightDisplay(LEDDisplay):
     FLASH_OFF_DURATION = 100
     FLASH_MINIMUM_TIME = 2000
     
-    states = Enum('WeightDisplayStates', [('IDLE', 1), ('START_FLASH'), ('FLASH_OFF', 2), ('FLASH_ON', 3), ('SHOW_WEIGHT', 4)])
+    states = Enum('WeightDisplayStates', [('IDLE', 1), ('START_FLASH', 2), ('FLASH_OFF', 3),
+                                          ('FLASH_ON', 4), ('SHOW_WEIGHT', 5)])
 
     def __init__(self, dendrite, led_start_index):
         super().__init__(f"WeightDisplay {dendrite.dendrite_index}", self.states, led_start_index)
@@ -165,7 +169,7 @@ class WeightDisplay(LEDDisplay):
         if self.current_state == self.states.START_FLASH:
             self.flash_start_time = t
             self.flash_finish_requested = False
-        elif self.flash_stop_requested and (t - self.flash_start_time) > self.FLASH_MINIMUM_TIME:
+        elif self.flash_finish_requested and (t - self.flash_start_time) > self.FLASH_MINIMUM_TIME:
             self.transition(self.states.SHOW_WEIGHT)
         elif self.current_state == self.states.START_FLASH or \
            (self.current_state == self.states.FLASH_ON and self.state_duration >= self.FLASH_ON_DURATION):
@@ -276,7 +280,7 @@ class Dendrite():
         self.rotary_switch.update()
         self.button.update()
         self.weight_display.update()
-        if self.button.current_value == 1:
+        if self.button.current_value == 0:
             self.transmitted_value = self.WEIGHT_VALUES[self.weight_index]
         else:
             self.transmitted_value = 0
@@ -336,6 +340,7 @@ class Soma(StateMachine):
     def update(self):
         super().update()
         self.rotary_switch.update()
+        self.threshold_display.update()
         # compute activation
         new_activation = sum([d.transmitted_value for d in self.dendrites])
         # update activation display -- should have an animation here
@@ -378,6 +383,8 @@ class Axon(StateMachine):
             self.transition(self.states.FIRE)
 
     def update(self):
+        super().update()
+        self.axon_display.update()
         t = now_msecs()
         if self.current_state == self.states.FIRE:
             self.firing_start_time = t
