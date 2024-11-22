@@ -28,10 +28,10 @@ RGB_COLORS = (
     (255,   0,   0),  # 1 - red
     (  0, 255,   0),  # 2 - green
     (  0,   0, 255),  # 3 - blue
-    (128,   0,   0),  # 4 - dim-red
-    (  0, 128,   0),  # 5 - dim-green
-    (  0,   0, 128),  # 6 - dim-blue (currently unused)
-    (128, 128, 128)   # 7 - white
+    (127,   0,   0),  # 4 - dim-red
+    (  0, 127,   0),  # 5 - dim-green
+    (  0,   0, 127),  # 6 - dim-blue (currently unused)
+    (127, 127, 127)   # 7 - white
 )
 
 DENDRITE_ROTARY_COLORS = (
@@ -51,22 +51,21 @@ DENDRITE_ROTARY_BLANK = (0,) * len(DENDRITE_ROTARY_COLORS[0])
 
 THRESHOLD_ROTARY_COLORS = (
     (0, 0, 0, 0, 3, 0, 0, 0, 0), #  0 = blue
-    (0, 0, 0, 4, 0, 0, 0, 0, 0), #  1 = dim-green
-    (0, 0, 4, 2, 0, 0, 0, 0, 0), #  2 = green dim-green
-    (0, 0, 2, 2, 0, 0, 0, 0, 0), #  3 = green green
-    (0, 4, 2, 2, 0, 0, 0, 0, 0), #  4 = green green dim-green
-    (0, 2, 2, 2, 0, 0, 0, 0, 0), #  5 = green green green
-    (4, 2, 2, 2, 0, 0, 0, 0, 0), #  6 = green green green dim-green
-    (2, 2, 2, 2, 0, 0, 0, 0, 0), #  7 = green green green green
-    (0, 0, 0, 0, 0, 0, 0, 0, 0), #  8 = nothing
-    (0, 0, 0, 0, 0, 1, 1, 1, 1), #  9 = red red red red
-    (0, 0, 0, 0, 0, 1, 1, 1, 5), # 10 = red red red dim-red
-    (0, 0, 0, 0, 0, 1, 1, 1, 0), # 11 = red red red
-    (0, 0, 0, 0, 0, 1, 1, 5, 0), # 12 = red red dim-red
-    (0, 0, 0, 0, 0, 1, 1, 0, 0), # 13 = red red
-    (0, 0, 0, 0, 0, 1, 5, 0, 0), # 13 = red dim-red
+    (0, 0, 0, 5, 0, 0, 0, 0, 0), #  1 = dim-green
+    (0, 0, 0, 2, 0, 0, 0, 0, 0), #  2 = green
+    (0, 0, 5, 2, 0, 0, 0, 0, 0), #  3 = green dim-green
+    (0, 0, 2, 2, 0, 0, 0, 0, 0), #  4 = green green
+    (0, 5, 2, 2, 0, 0, 0, 0, 0), #  5 = green green dim-green
+    (0, 2, 2, 2, 0, 0, 0, 0, 0), #  6 = green green green
+    (5, 2, 2, 2, 0, 0, 0, 0, 0), #  7 = green green green dim-green
+    (2, 2, 2, 2, 0, 0, 0, 0, 0), #  8 = green green green green
+    (0, 0, 0, 0, 0, 1, 1, 1, 4), #  9 = red red red dim-red
+    (0, 0, 0, 0, 0, 1, 1, 1, 0), # 10 = red red red
+    (0, 0, 0, 0, 0, 1, 1, 4, 0), # 11 = red red dim-red
+    (0, 0, 0, 0, 0, 1, 1, 0, 0), # 12 = red red
+    (0, 0, 0, 0, 0, 1, 4, 0, 0), # 13 = red dim-red
     (0, 0, 0, 0, 0, 1, 0, 0, 0), # 14 = red
-    (0, 0, 0, 0, 0, 5, 0, 0, 0), # 15 = dim-red
+    (0, 0, 0, 0, 0, 4, 0, 0, 0), # 15 = dim-red
 )
 
 ACTIVATION_COLORS = {

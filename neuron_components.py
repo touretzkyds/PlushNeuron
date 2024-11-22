@@ -15,6 +15,7 @@ from plush_sounds import queue_sound, WEIGHT_SOUNDS, WEIGHT_INCREASE_SOUNDS, WEI
 class Debouncer():
     BUTTON_PERSISTENCE_TIME = 100 # msecs
     ROTARY_PERSISTENCE_TIME = 50 # msecs
+    MAX_PERSISTENCE_TIME = max(BUTTON_PERSISTENCE_TIME, ROTARY_PERSISTENCE_TIME)
 
     def __init__(self, persistence_time):
         self.persistence_time = persistence_time
@@ -87,14 +88,16 @@ class ThresholdRotarySwitch(RotarySwitch):
 
     def update(self):
         new_value = self.debouncer.debounce(self.decode_switch())
-        if (0 <= self.current_value < new_value < self.midpoint) or \
+        # Logic is slightly different than for WeightRotarySwitch
+        # because we're allowing midpoint as a valid switch value.
+        if (0 <= self.current_value < new_value <= self.midpoint) or \
            (self.midpoint < self.current_value < new_value) or \
-           (new_value < self.midpoint < self.current_value):
+           (new_value <= self.midpoint < self.current_value):
             self.current_value = new_value
             self.soma.increase_threshold()
-        elif (0 <= new_value < self.current_value < self.midpoint) or \
+        elif (0 <= new_value < self.current_value <= self.midpoint) or \
              (self.midpoint < new_value < self.current_value) or \
-             (self.current_value < self.midpoint < new_value):
+             (self.current_value <= self.midpoint < new_value):
             self.current_value = new_value
             self.soma.decrease_threshold()
         else:
@@ -113,22 +116,26 @@ class Button(StateMachine):
         self.barrel_gpio_pin = barrel_gpio_pin
         self.button_audio_channel = button_audio_channel
         self.debouncer = Debouncer(Debouncer.BUTTON_PERSISTENCE_TIME)
-        self.current_value = 1
+        self.current_value = True  # pin is high when button not pressed
+        self.transmitted_value = 0
 
     def update(self):
         super().update()
         # not handling the barrel connector for now, just the button
-        new_value = self.debouncer.debounce(self.button_gpio_pin.value + 0)
+        new_value = self.debouncer.debounce(self.button_gpio_pin.value)
         # button is pressed when pin pulled down to 0
-        #print(f"Button current={self.current_value} new={new_value}")
         if new_value < self.current_value:
+            self.current_value = new_value
             self.button_pressed()
         elif new_value > self.current_value:
+            self.current_value = new_value
             self.button_released()
+        else:
+            pass # state unchanged
 
     def button_pressed(self):
         print(f"Button pressed: {self} {self.dendrite}")
-        self.current_value = 0
+        self.transmitted_value = 1
         sound = WEIGHT_SOUNDS[self.dendrite.dendrite_index][self.dendrite.weight_index]
         queue_sound(sound, self.button_audio_channel)
         self.dendrite.weight_display.transition(WeightDisplay.states.START_FLASH)
@@ -136,7 +143,7 @@ class Button(StateMachine):
 
     def button_released(self):
         print(f"Button released: {self} {self.dendrite}")
-        self.current_value = 1
+        self.transmitted_value = 0
         self.dendrite.weight_display.finish_flash()
         self.transition(self.states.BUTTON_OFF)
 
@@ -224,7 +231,6 @@ class AxonDisplay(LEDDisplay):
 
     states = Enum('AxonStates', [('IDLE', 1), ('START_FLASH', 2), ('FLASH_ON', 3), ('FLASH_OFF', 4), ('SHUTDOWN', 5)])
 
-
     def __init__(self, axon, led_start_index):
         super().__init__('AxonDisplay', self.states, led_start_index)
         self.axon = axon
@@ -303,15 +309,15 @@ class Dendrite():
 
 class Soma(StateMachine):
     THRESHOLD_VALUES = { # 16 position switch
-         0 : 0.0,
-         1 : 0.5,
-         2 : 1.0,
-         3 : 1.5,
-         4 : 2.0,
-         5 : 2.5,
-         6 : 3.0,
-         7 : 3.5,
-         # no entry for 8
+         0 :  0.0,
+         1 :  0.5,
+         2 :  1.0,
+         3 :  1.5,
+         4 :  2.0,
+         5 :  2.5,
+         6 :  3.0,
+         7 :  3.5,
+         8 :  4.0,
          9 : -3.5,
         10 : -3.0,
         11 : -2.5,
@@ -321,7 +327,7 @@ class Soma(StateMachine):
         15 : -0.5
     }
 
-    states = Enum('SomaStates', [('IDLE', 1)])
+    states = Enum('SomaStates', [('STARTUP', 1), ('IDLE', 2)])
 
     def __init__(self, dendrites, axon, threshold_gpio_pins,
                  activation_led_start_index, threshold_led_start_index,
@@ -346,11 +352,17 @@ class Soma(StateMachine):
         # update activation display -- should have an animation here
         self.current_activation = new_activation
         self.activation_display.update()
-        # decide if we should fire
-        threshold = self.THRESHOLD_VALUES[self.rotary_switch.current_value]
-        if new_activation > threshold:
-            print(f"activation {new_activation} > threshold {threshold}: FIRE!")
-            self.axon.maybe_fire()
+        if self.current_state == self.states.STARTUP:
+            # Give switches and buttons time to initialize their
+            # values before unmuting.
+            if self.state_duration > Debouncer.MAX_PERSISTENCE_TIME*1.25:
+                plush_sounds.global_mute = False
+                self.transition(self.states.IDLE)
+        else:  # state is IDLE
+            threshold = self.THRESHOLD_VALUES[self.rotary_switch.current_value]
+            if new_activation > threshold:
+                print(f"activation {new_activation} > threshold {threshold}: FIRE!")
+                self.axon.maybe_fire()
 
     def increase_threshold(self):
         sound = THRESHOLD_INCREASE_SOUNDS[self.threshold_index]
@@ -368,8 +380,12 @@ class Soma(StateMachine):
 
 class Axon(StateMachine):
     AXON_FIRING_DURATION = 2000
+    DELAY_FIRING_SOUND = 300
 
-    states = Enum('AxonStates', [('IDLE', 1), ('FIRE', 2), ('FIRING', 3)])
+    states = Enum('AxonStates', [('IDLE', 1),
+                                 ('FIRE', 2),
+                                 ('FIRING_FLASH', 3),
+                                 ('FIRING_SOUND', 4)])
 
     def __init__(self, barrel_pin, led_start_index, activation_fire_channel):
         super().__init__('axon', self.states)
@@ -390,9 +406,12 @@ class Axon(StateMachine):
             self.firing_start_time = t
             self.barrel_pin.value = True
             self.axon_display.transition(self.axon_display.states.START_FLASH)
-            queue_sound(AXON_FIRE_SOUND, self.activation_fire_channel)
             self.transition(self.states.FIRING)
-        elif self.current_state == self.states.FIRING and \
+        elif self.current_state == self.states.FIRING_FLASH and \
+             self.state_duration > DELAY_FIRING_SOUND:
+            queue_sound(AXON_FIRE_SOUND, self.activation_fire_channel)
+            self.transition(states.FIRING_SOUND)
+        elif self.current_state == self.states.FIRING_SOUND and \
              (t - self.firing_start_time) > self.AXON_FIRING_DURATION:
             self.axon_display.transition(self.axon_display.states.SHUTDOWN)
             self.barrel_pin.value = False

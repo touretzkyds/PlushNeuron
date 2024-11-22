@@ -45,8 +45,12 @@ soma = Soma(dendrites, axon,
             plush_sounds.THRESHOLD_WEIGHT_CHANNEL,
             plush_sounds.ACTIVATION_FIRE_CHANNEL)
 
+# START-UP CODE
+
 gpio_pins.init_gpio()
 led_display.init_leds()
+
+axon.axon_display.debug = True  # DEBUG AXON FLASH
 
 while True:
     for d in dendrites:

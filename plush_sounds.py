@@ -1,6 +1,8 @@
 import pygame
 from pygame.mixer import Sound
 
+global_mute = True   # for silence on start-up
+
 # Mixer channels
 DENDRITE_1_BUTTON_CHANNEL = 0
 DENDRITE_1_WEIGHT_CHANNEL = 1
@@ -157,6 +159,8 @@ THRESHOLD_DECREASE_SOUNDS = {
 AXON_FIRE_SOUND = Sound("sounds/8-bit-laser.ogg")
 
 def queue_sound(sound, channel_id):
+    if global_mute:
+        return
     # play sound if channel is free, else queue it for later
     if not channels[channel_id].get_busy():
         channels[channel_id].play(sound)
