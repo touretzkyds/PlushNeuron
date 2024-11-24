@@ -31,16 +31,16 @@ channels = [pygame.mixer.Channel(i) for i in channel_ids]
 sound_queues = [list() for c in channels]
 
 DENDRITE_1_WEIGHT_SOUNDS = {
-    0 : Sound("sounds/organ_C4.ogg"),   #  0
-    1 : Sound("sounds/organ_E4.ogg"),   # +1
-    2 : Sound("sounds/organ_G4.ogg"),   # +2
-    3 : Sound("sounds/organ_C5.ogg"),   # +3
-    4 : Sound("sounds/organ_E5.ogg"),   # +4
+    0 : Sound("sounds/dendrite1/organ_C4.ogg"),   #  0
+    1 : Sound("sounds/dendrite1/organ_E4.ogg"),   # +1
+    2 : Sound("sounds/dendrite1/organ_G4.ogg"),   # +2
+    3 : Sound("sounds/dendrite1/organ_C5.ogg"),   # +3
+    4 : Sound("sounds/dendrite1/organ_E5.ogg"),   # +4
     # 5 is not used
-    6 : Sound("sounds/organ_B2.ogg"),   # -4
-    7 : Sound("sounds/organ_D#3.ogg"),  # -3
-    8 : Sound("sounds/organ_F#3.ogg"),  # -2
-    9 : Sound("sounds/organ_A3.ogg")    # -1
+    6 : Sound("sounds/dendrite1/organ_B2.ogg"),   # -4
+    7 : Sound("sounds/dendrite1/organ_D#3.ogg"),  # -3
+    8 : Sound("sounds/dendrite1/organ_F#3.ogg"),  # -2
+    9 : Sound("sounds/dendrite1/organ_A3.ogg")    # -1
 }
 
 
@@ -50,37 +50,60 @@ DENDRITE_1_WEIGHT_SOUNDS = {
 
 # index is the starting value of the rotary switch before increase
 DENDRITE_1_WEIGHT_INCREASE_SOUNDS = {
-    0 : Sound("sounds/weight-transitions/C4-E4.ogg"),
-    1 : Sound("sounds/weight-transitions/E4-G4.ogg"),
-    2 : Sound("sounds/weight-transitions/G4-C5.ogg"),
-    3 : Sound("sounds/weight-transitions/C5-E5.ogg"),
-    4 : Sound("sounds/organ_B2.ogg"),  # shouldn't need this
+    0 : Sound("sounds/dendrite1/weight-transitions/C4-E4.ogg"),
+    1 : Sound("sounds/dendrite1/weight-transitions/E4-G4.ogg"),
+    2 : Sound("sounds/dendrite1/weight-transitions/G4-C5.ogg"),
+    3 : Sound("sounds/dendrite1/weight-transitions/C5-E5.ogg"),
+    4 : Sound("shutter16.wav"),  # shouldn't need this
     # 5 is not used
-    6 : Sound("sounds/weight-transitions/B2-D#3.ogg"),
-    7 : Sound("sounds/weight-transitions/D#3-F#3.ogg"),
-    8 : Sound("sounds/weight-transitions/F#3-A3.ogg"),
-    9 : Sound("sounds/weight-transitions/A3-C4.ogg")
+    6 : Sound("sounds/dendrite1/weight-transitions/B2-D#3.ogg"),
+    7 : Sound("sounds/dendrite1/weight-transitions/D#3-F#3.ogg"),
+    8 : Sound("sounds/dendrite1/weight-transitions/F#3-A3.ogg"),
+    9 : Sound("sounds/dendrite1/weight-transitions/A3-C4.ogg")
 }
 
 # index is the starting value of the rotary switch before decrease
 DENDRITE_1_WEIGHT_DECREASE_SOUNDS = {
-    0 : Sound("sounds/weight-transitions/C4-A3.ogg"),
-    1 : Sound("sounds/weight-transitions/E4-C4.ogg"),
-    2 : Sound("sounds/weight-transitions/G4-E4.ogg"),
-    3 : Sound("sounds/weight-transitions/C5-G4.ogg"),
-    4 : Sound("sounds/weight-transitions/E5-C5.ogg"),
+    0 : Sound("sounds/dendrite1/weight-transitions/C4-A3.ogg"),
+    1 : Sound("sounds/dendrite1/weight-transitions/E4-C4.ogg"),
+    2 : Sound("sounds/dendrite1/weight-transitions/G4-E4.ogg"),
+    3 : Sound("sounds/dendrite1/weight-transitions/C5-G4.ogg"),
+    4 : Sound("sounds/dendrite1/weight-transitions/E5-C5.ogg"),
     # 5 is not used
-    6 : Sound("sounds/weight-transitions/D#3-B2.ogg"), # shouldn't need this
-    7 : Sound("sounds/weight-transitions/D#3-B2.ogg"),
-    8 : Sound("sounds/weight-transitions/F#3-D#3.ogg"),
-    9 : Sound("sounds/weight-transitions/A3-F#3.ogg")
+    6 : Sound("sounds/dendrite1/weight-transitions/D#3-B2.ogg"), # shouldn't need this
+    7 : Sound("sounds/dendrite1/weight-transitions/D#3-B2.ogg"),
+    8 : Sound("sounds/dendrite1/weight-transitions/F#3-D#3.ogg"),
+    9 : Sound("sounds/dendrite1/weight-transitions/A3-F#3.ogg")
 }
 
-DENDRITE_2_WEIGHT_SOUNDS = DENDRITE_1_WEIGHT_SOUNDS
+DENDRITE_2_WEIGHT_SOUNDS = {
+    0 : Sound("sounds/dendrite2/clarinet_C4.ogg"),   #  0
+    1 : Sound("sounds/dendrite2/clarinet_E4.ogg"),   # +1
+    2 : Sound("sounds/dendrite2/clarinet_G4.ogg"),   # +2
+    3 : Sound("sounds/dendrite2/clarinet_C5.ogg"),   # +3
+    4 : Sound("sounds/dendrite2/clarinet_E5.ogg"),   # +4
+    # 5 is not used
+    6 : Sound("sounds/dendrite2/clarinet_B2.ogg"),   # -4
+    7 : Sound("sounds/dendrite2/clarinet_D#3.ogg"),  # -3
+    8 : Sound("sounds/dendrite2/clarinet_F#3.ogg"),  # -2
+    9 : Sound("sounds/dendrite2/clarinet_A3.ogg")    # -1
+}
+
 DENDRITE_2_WEIGHT_INCREASE_SOUNDS = DENDRITE_1_WEIGHT_INCREASE_SOUNDS
 DENDRITE_2_WEIGHT_DECREASE_SOUNDS = DENDRITE_1_WEIGHT_DECREASE_SOUNDS
 
-DENDRITE_3_WEIGHT_SOUNDS = DENDRITE_1_WEIGHT_SOUNDS
+DENDRITE_3_WEIGHT_SOUNDS = {
+    0 : Sound("sounds/dendrite3/trombone_C4.ogg"),   #  0
+    1 : Sound("sounds/dendrite3/trombone_E4.ogg"),   # +1
+    2 : Sound("sounds/dendrite3/trombone_G4.ogg"),   # +2
+    3 : Sound("sounds/dendrite3/trombone_C5.ogg"),   # +3
+    4 : Sound("sounds/dendrite3/trombone_E5.ogg"),   # +4
+    # 5 is not used
+    6 : Sound("sounds/dendrite3/trombone_B2.ogg"),   # -4
+    7 : Sound("sounds/dendrite3/trombone_D#3.ogg"),  # -3
+    8 : Sound("sounds/dendrite3/trombone_F#3.ogg"),  # -2
+    9 : Sound("sounds/dendrite3/trombone_A3.ogg")    # -1
+}
 DENDRITE_3_WEIGHT_INCREASE_SOUNDS = DENDRITE_1_WEIGHT_INCREASE_SOUNDS
 DENDRITE_3_WEIGHT_DECREASE_SOUNDS = DENDRITE_1_WEIGHT_DECREASE_SOUNDS 
 
