@@ -7,6 +7,7 @@ from led_display import display_pattern, DENDRITE_ROTARY_COLORS, DENDRITE_ROTARY
     THRESHOLD_ROTARY_COLORS, ACTIVATION_COLORS, AXON_BLANK_PATTERN, AXON_FIRING_PATTERN
 from plush_sounds import queue_sound, WEIGHT_SOUNDS, WEIGHT_INCREASE_SOUNDS, WEIGHT_DECREASE_SOUNDS, \
     THRESHOLD_INCREASE_SOUNDS, THRESHOLD_DECREASE_SOUNDS, AXON_FIRE_SOUND
+import plush_sounds
 
 """
 **** TREAT ZERO VALUE DIFFERENTLY FOR ROTARY SWITCHES ****
@@ -226,8 +227,8 @@ class ActivationDisplay(LEDDisplay):
 
 
 class AxonDisplay(LEDDisplay):
-    FLASH_ON_DURATION = 200
-    FLASH_OFF_DURATION = 100
+    FLASH_ON_DURATION = 100
+    FLASH_OFF_DURATION = 50
 
     states = Enum('AxonStates', [('IDLE', 1), ('START_FLASH', 2), ('FLASH_ON', 3), ('FLASH_OFF', 4), ('SHUTDOWN', 5)])
 
@@ -236,6 +237,7 @@ class AxonDisplay(LEDDisplay):
         self.axon = axon
 
     def update(self):
+        super().update()
         t = now_msecs()
         if self.current_state == self.states.START_FLASH:
             display_pattern(AXON_FIRING_PATTERN, self.led_start_index)
@@ -361,7 +363,7 @@ class Soma(StateMachine):
         else:  # state is IDLE
             threshold = self.THRESHOLD_VALUES[self.rotary_switch.current_value]
             if new_activation > threshold:
-                print(f"activation {new_activation} > threshold {threshold}: FIRE!")
+                # print(f"activation {new_activation} > threshold {threshold}: FIRE!")
                 self.axon.maybe_fire()
 
     def increase_threshold(self):
@@ -379,7 +381,7 @@ class Soma(StateMachine):
 
 
 class Axon(StateMachine):
-    AXON_FIRING_DURATION = 2000
+    AXON_FIRING_DURATION = 750
     DELAY_FIRING_SOUND = 300
 
     states = Enum('AxonStates', [('IDLE', 1),
@@ -406,11 +408,11 @@ class Axon(StateMachine):
             self.firing_start_time = t
             self.barrel_pin.value = True
             self.axon_display.transition(self.axon_display.states.START_FLASH)
-            self.transition(self.states.FIRING)
+            self.transition(self.states.FIRING_FLASH)
         elif self.current_state == self.states.FIRING_FLASH and \
-             self.state_duration > DELAY_FIRING_SOUND:
+             self.state_duration > self.DELAY_FIRING_SOUND:
             queue_sound(AXON_FIRE_SOUND, self.activation_fire_channel)
-            self.transition(states.FIRING_SOUND)
+            self.transition(self.states.FIRING_SOUND)
         elif self.current_state == self.states.FIRING_SOUND and \
              (t - self.firing_start_time) > self.AXON_FIRING_DURATION:
             self.axon_display.transition(self.axon_display.states.SHUTDOWN)

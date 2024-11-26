@@ -28,9 +28,9 @@ RGB_COLORS = (
     (255,   0,   0),  # 1 - red
     (  0, 255,   0),  # 2 - green
     (  0,   0, 255),  # 3 - blue
-    (127,   0,   0),  # 4 - dim-red
-    (  0, 127,   0),  # 5 - dim-green
-    (  0,   0, 127),  # 6 - dim-blue (currently unused)
+    (  4,   2,   2),  # 4 - dim-red
+    (  2,   4,   2),  # 5 - dim-green
+    (  0,   0,  16),  # 6 - dim-blue (currently unused)
     (127, 127, 127)   # 7 - white
 )
 

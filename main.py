@@ -50,12 +50,13 @@ soma = Soma(dendrites, axon,
 gpio_pins.init_gpio()
 led_display.init_leds()
 
-axon.axon_display.debug = True  # DEBUG AXON FLASH
+def main():
+    while True:
+        for d in dendrites:
+            d.update()
+            soma.update()
+            axon.update()
+            plush_sounds.update_all_channels()
+            time.sleep(0.01)
 
-while True:
-    for d in dendrites:
-        d.update()
-    soma.update()
-    axon.update()
-    plush_sounds.update_all_channels()
-    time.sleep(0.01)
+main()
