@@ -89,8 +89,33 @@ DENDRITE_2_WEIGHT_SOUNDS = {
     9 : Sound("sounds/dendrite2/clarinet_A3.ogg")    # -1
 }
 
-DENDRITE_2_WEIGHT_INCREASE_SOUNDS = DENDRITE_1_WEIGHT_INCREASE_SOUNDS
-DENDRITE_2_WEIGHT_DECREASE_SOUNDS = DENDRITE_1_WEIGHT_DECREASE_SOUNDS
+# index is the starting value of the rotary switch before increase
+DENDRITE_2_WEIGHT_INCREASE_SOUNDS = {
+    0 : Sound("sounds/dendrite2/weight-transitions/clarinet_C4-E4.ogg"),
+    1 : Sound("sounds/dendrite2/weight-transitions/clarinet_E4-G4.ogg"),
+    2 : Sound("sounds/dendrite2/weight-transitions/clarinet_G4-C5.ogg"),
+    3 : Sound("sounds/dendrite2/weight-transitions/clarinet_C5-E5.ogg"),
+    # 4 is not used
+    # 5 is not used
+    6 : Sound("sounds/dendrite2/weight-transitions/clarinet_B2-D#3.ogg"),
+    7 : Sound("sounds/dendrite2/weight-transitions/clarinet_D#3-F#3.ogg"),
+    8 : Sound("sounds/dendrite2/weight-transitions/clarinet_F#3-A3.ogg"),
+    9 : Sound("sounds/dendrite2/weight-transitions/clarinet_A3-C4.ogg")
+}
+
+# index is the starting value of the rotary switch before decrease
+DENDRITE_2_WEIGHT_DECREASE_SOUNDS = {
+    0 : Sound("sounds/dendrite2/weight-transitions/clarinet_C4-A3.ogg"),
+    1 : Sound("sounds/dendrite2/weight-transitions/clarinet_E4-C4.ogg"),
+    2 : Sound("sounds/dendrite2/weight-transitions/clarinet_G4-E4.ogg"),
+    3 : Sound("sounds/dendrite2/weight-transitions/clarinet_C5-G4.ogg"),
+    4 : Sound("sounds/dendrite2/weight-transitions/clarinet_E5-C5.ogg"),
+    # 5 is not used
+    # 6 is not used
+    7 : Sound("sounds/dendrite2/weight-transitions/clarinet_D#3-B2.ogg"),
+    8 : Sound("sounds/dendrite2/weight-transitions/clarinet_F#3-D#3.ogg"),
+    9 : Sound("sounds/dendrite2/weight-transitions/clarinet_A3-F#3.ogg")
+}
 
 DENDRITE_3_WEIGHT_SOUNDS = {
     0 : Sound("sounds/dendrite3/trombone_C4.ogg"),   #  0
@@ -104,8 +129,34 @@ DENDRITE_3_WEIGHT_SOUNDS = {
     8 : Sound("sounds/dendrite3/trombone_F#3.ogg"),  # -2
     9 : Sound("sounds/dendrite3/trombone_A3.ogg")    # -1
 }
-DENDRITE_3_WEIGHT_INCREASE_SOUNDS = DENDRITE_1_WEIGHT_INCREASE_SOUNDS
-DENDRITE_3_WEIGHT_DECREASE_SOUNDS = DENDRITE_1_WEIGHT_DECREASE_SOUNDS 
+
+# index is the starting value of the rotary switch before increase
+DENDRITE_3_WEIGHT_INCREASE_SOUNDS = {
+    0 : Sound("sounds/dendrite3/weight-transitions/trombone_C4-E4.ogg"),
+    1 : Sound("sounds/dendrite3/weight-transitions/trombone_E4-G4.ogg"),
+    2 : Sound("sounds/dendrite3/weight-transitions/trombone_G4-C5.ogg"),
+    3 : Sound("sounds/dendrite3/weight-transitions/trombone_C5-E5.ogg"),
+    # 4 is not used
+    # 5 is not used
+    6 : Sound("sounds/dendrite3/weight-transitions/trombone_B2-D#3.ogg"),
+    7 : Sound("sounds/dendrite3/weight-transitions/trombone_D#3-F#3.ogg"),
+    8 : Sound("sounds/dendrite3/weight-transitions/trombone_F#3-A3.ogg"),
+    9 : Sound("sounds/dendrite3/weight-transitions/trombone_A3-C4.ogg")
+}
+
+# index is the starting value of the rotary switch before decrease
+DENDRITE_3_WEIGHT_DECREASE_SOUNDS = {
+    0 : Sound("sounds/dendrite3/weight-transitions/trombone_C4-A3.ogg"),
+    1 : Sound("sounds/dendrite3/weight-transitions/trombone_E4-C4.ogg"),
+    2 : Sound("sounds/dendrite3/weight-transitions/trombone_G4-E4.ogg"),
+    3 : Sound("sounds/dendrite3/weight-transitions/trombone_C5-G4.ogg"),
+    4 : Sound("sounds/dendrite3/weight-transitions/trombone_E5-C5.ogg"),
+    # 5 is not used
+    # 6 is not used
+    7 : Sound("sounds/dendrite3/weight-transitions/trombone_D#3-B2.ogg"),
+    8 : Sound("sounds/dendrite3/weight-transitions/trombone_F#3-D#3.ogg"),
+    9 : Sound("sounds/dendrite3/weight-transitions/trombone_A3-F#3.ogg")
+}
 
 WEIGHT_SOUNDS = [
     DENDRITE_1_WEIGHT_SOUNDS,
