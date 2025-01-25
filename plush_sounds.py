@@ -37,16 +37,16 @@ class PlushSound(Sound):
 
 
 DENDRITE_1_WEIGHT_SOUNDS = {
-    0 : PlushSound("sounds/dendrite1/organ_C4.ogg"),   #  0
-    1 : PlushSound("sounds/dendrite1/organ_E4.ogg"),   # +1
-    2 : PlushSound("sounds/dendrite1/organ_G4.ogg"),   # +2
-    3 : PlushSound("sounds/dendrite1/organ_C5.ogg"),   # +3
-    4 : PlushSound("sounds/dendrite1/organ_E5.ogg"),   # +4
+    0 : PlushSound("sounds/dendrite1/clarinet_C4.mp3"),   #  0
+    1 : PlushSound("sounds/dendrite1/clarinet_E4.mp3"),   # +1
+    2 : PlushSound("sounds/dendrite1/clarinet_G4.mp3"),   # +2
+    3 : PlushSound("sounds/dendrite1/clarinet_C5.mp3"),   # +3
+    4 : PlushSound("sounds/dendrite1/clarinet_E5.mp3"),   # +4
     # 5 is not used
-    6 : PlushSound("sounds/dendrite1/organ_B2.ogg"),   # -4
-    7 : PlushSound("sounds/dendrite1/organ_D#3.ogg"),  # -3
-    8 : PlushSound("sounds/dendrite1/organ_F#3.ogg"),  # -2
-    9 : PlushSound("sounds/dendrite1/organ_A3.ogg")    # -1
+    6 : PlushSound("sounds/dendrite1/clarinet_B2.mp3"),   # -4
+    7 : PlushSound("sounds/dendrite1/clarinet_D#3.mp3"),  # -3
+    8 : PlushSound("sounds/dendrite1/clarinet_F#3.mp3"),  # -2
+    9 : PlushSound("sounds/dendrite1/clarinet_A3.mp3")    # -1
 }
 
 
@@ -56,71 +56,71 @@ DENDRITE_1_WEIGHT_SOUNDS = {
 
 # index is the starting value of the rotary switch before increase
 DENDRITE_1_WEIGHT_INCREASE_SOUNDS = {
-    0 : PlushSound("sounds/dendrite1/weight-transitions/organ_C4-E4.ogg"),
-    1 : PlushSound("sounds/dendrite1/weight-transitions/organ_E4-G4.ogg"),
-    2 : PlushSound("sounds/dendrite1/weight-transitions/organ_G4-C5.ogg"),
-    3 : PlushSound("sounds/dendrite1/weight-transitions/organ_C5-E5.ogg"),
+    0 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_C4-E4.mp3"),
+    1 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_E4-G4.mp3"),
+    2 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_G4-C5.mp3"),
+    3 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_C5-E5.mp3"),
     # 4 is not used
     # 5 is not used
-    6 : PlushSound("sounds/dendrite1/weight-transitions/organ_B2-D#3.ogg"),
-    7 : PlushSound("sounds/dendrite1/weight-transitions/organ_D#3-F#3.ogg"),
-    8 : PlushSound("sounds/dendrite1/weight-transitions/organ_F#3-A3.ogg"),
-    9 : PlushSound("sounds/dendrite1/weight-transitions/organ_A3-C4.ogg")
+    6 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_B2-D#3.mp3"),
+    7 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_D#3-F#3.mp3"),
+    8 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_F#3-A3.mp3"),
+    9 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_A3-C4.mp3")
 }
 
 # index is the starting value of the rotary switch before decrease
 DENDRITE_1_WEIGHT_DECREASE_SOUNDS = {
-    0 : PlushSound("sounds/dendrite1/weight-transitions/organ_C4-A3.ogg"),
-    1 : PlushSound("sounds/dendrite1/weight-transitions/organ_E4-C4.ogg"),
-    2 : PlushSound("sounds/dendrite1/weight-transitions/organ_G4-E4.ogg"),
-    3 : PlushSound("sounds/dendrite1/weight-transitions/organ_C5-G4.ogg"),
-    4 : PlushSound("sounds/dendrite1/weight-transitions/organ_E5-C5.ogg"),
+    0 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_C4-A3.mp3"),
+    1 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_E4-C4.mp3"),
+    2 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_G4-E4.mp3"),
+    3 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_C5-G4.mp3"),
+    4 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_E5-C5.mp3"),
     # 5 is not used
     # 6 is not used
-    7 : PlushSound("sounds/dendrite1/weight-transitions/organ_D#3-B2.ogg"),
-    8 : PlushSound("sounds/dendrite1/weight-transitions/organ_F#3-D#3.ogg"),
-    9 : PlushSound("sounds/dendrite1/weight-transitions/organ_A3-F#3.ogg")
+    7 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_D#3-B2.mp3"),
+    8 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_F#3-D#3.mp3"),
+    9 : PlushSound("sounds/dendrite1/weight-transitions/clarinet_A3-F#3.mp3")
 }
 
 DENDRITE_2_WEIGHT_SOUNDS = {
-    0 : PlushSound("sounds/dendrite2/clarinet_C4.ogg"),   #  0
-    1 : PlushSound("sounds/dendrite2/clarinet_E4.ogg"),   # +1
-    2 : PlushSound("sounds/dendrite2/clarinet_G4.ogg"),   # +2
-    3 : PlushSound("sounds/dendrite2/clarinet_C5.ogg"),   # +3
-    4 : PlushSound("sounds/dendrite2/clarinet_E5.ogg"),   # +4
+    0 : PlushSound("sounds/dendrite2/oud_C4.mp3"),   #  0
+    1 : PlushSound("sounds/dendrite2/oud_E4.mp3"),   # +1
+    2 : PlushSound("sounds/dendrite2/oud_G4.mp3"),   # +2
+    3 : PlushSound("sounds/dendrite2/oud_C5.mp3"),   # +3
+    4 : PlushSound("sounds/dendrite2/oud_E5.mp3"),   # +4
     # 5 is not used
-    6 : PlushSound("sounds/dendrite2/clarinet_B2.ogg"),   # -4
-    7 : PlushSound("sounds/dendrite2/clarinet_D#3.ogg"),  # -3
-    8 : PlushSound("sounds/dendrite2/clarinet_F#3.ogg"),  # -2
-    9 : PlushSound("sounds/dendrite2/clarinet_A3.ogg")    # -1
+    6 : PlushSound("sounds/dendrite2/oud_B2.mp3"),   # -4
+    7 : PlushSound("sounds/dendrite2/oud_D#3.mp3"),  # -3
+    8 : PlushSound("sounds/dendrite2/oud_F#3.mp3"),  # -2
+    9 : PlushSound("sounds/dendrite2/oud_A3.mp3")    # -1
 }
 
 # index is the starting value of the rotary switch before increase
 DENDRITE_2_WEIGHT_INCREASE_SOUNDS = {
-    0 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_C4-E4.ogg"),
-    1 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_E4-G4.ogg"),
-    2 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_G4-C5.ogg"),
-    3 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_C5-E5.ogg"),
+    0 : PlushSound("sounds/dendrite2/weight-transitions/oud_C4-E4.mp3"),
+    1 : PlushSound("sounds/dendrite2/weight-transitions/oud_E4-G4.mp3"),
+    2 : PlushSound("sounds/dendrite2/weight-transitions/oud_G4-C5.mp3"),
+    3 : PlushSound("sounds/dendrite2/weight-transitions/oud_C5-E5.mp3"),
     # 4 is not used
     # 5 is not used
-    6 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_B2-D#3.ogg"),
-    7 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_D#3-F#3.ogg"),
-    8 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_F#3-A3.ogg"),
-    9 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_A3-C4.ogg")
+    6 : PlushSound("sounds/dendrite2/weight-transitions/oud_B2-D#3.mp3"),
+    7 : PlushSound("sounds/dendrite2/weight-transitions/oud_D#3-F#3.mp3"),
+    8 : PlushSound("sounds/dendrite2/weight-transitions/oud_F#3-A3.mp3"),
+    9 : PlushSound("sounds/dendrite2/weight-transitions/oud_A3-C4.mp3")
 }
 
 # index is the starting value of the rotary switch before decrease
 DENDRITE_2_WEIGHT_DECREASE_SOUNDS = {
-    0 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_C4-A3.ogg"),
-    1 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_E4-C4.ogg"),
-    2 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_G4-E4.ogg"),
-    3 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_C5-G4.ogg"),
-    4 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_E5-C5.ogg"),
+    0 : PlushSound("sounds/dendrite2/weight-transitions/oud_C4-A3.mp3"),
+    1 : PlushSound("sounds/dendrite2/weight-transitions/oud_E4-C4.mp3"),
+    2 : PlushSound("sounds/dendrite2/weight-transitions/oud_G4-E4.mp3"),
+    3 : PlushSound("sounds/dendrite2/weight-transitions/oud_C5-G4.mp3"),
+    4 : PlushSound("sounds/dendrite2/weight-transitions/oud_E5-C5.mp3"),
     # 5 is not used
     # 6 is not used
-    7 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_D#3-B2.ogg"),
-    8 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_F#3-D#3.ogg"),
-    9 : PlushSound("sounds/dendrite2/weight-transitions/clarinet_A3-F#3.ogg")
+    7 : PlushSound("sounds/dendrite2/weight-transitions/oud_D#3-B2.mp3"),
+    8 : PlushSound("sounds/dendrite2/weight-transitions/oud_F#3-D#3.mp3"),
+    9 : PlushSound("sounds/dendrite2/weight-transitions/oud_A3-F#3.mp3")
 }
 
 DENDRITE_3_WEIGHT_SOUNDS = {
@@ -194,24 +194,24 @@ WEIGHT_DECREASE_SOUNDS = [
 
 # index is the starting value of the rotary switch before increase
 THRESHOLD_INCREASE_SOUNDS = {
-     0 : PlushSound("sounds/threshold-transitions/C4-D4.mp3"),   #  0.0
-     1 : PlushSound("sounds/threshold-transitions/D4-E4.mp3"),   #  0.5
-     2 : PlushSound("sounds/threshold-transitions/E4-F4.mp3"),   #  1.0
-     3 : PlushSound("sounds/threshold-transitions/F4-G4.mp3"),   #  1.5
-     4 : PlushSound("sounds/threshold-transitions/G4-A#4.mp3"),  #  2.0
-     5 : PlushSound("sounds/threshold-transitions/A#4-C5.mp3"),  #  2.5
-     6 : PlushSound("sounds/threshold-transitions/C5-D5.mp3"),   #  3.0
+     0 : PlushSound("sounds/threshold-transitions/C4-D4.ogg"),   #  0.0
+     1 : PlushSound("sounds/threshold-transitions/D4-E4.ogg"),   #  0.5
+     2 : PlushSound("sounds/threshold-transitions/E4-F4.ogg"),   #  1.0
+     3 : PlushSound("sounds/threshold-transitions/F4-G4.ogg"),   #  1.5
+     4 : PlushSound("sounds/threshold-transitions/G4-A#4.ogg"),  #  2.0
+     5 : PlushSound("sounds/threshold-transitions/A#4-C5.ogg"),  #  2.5
+     6 : PlushSound("sounds/threshold-transitions/C5-D5.ogg"),   #  3.0
      # 7 is a valid weight but no increase transition
      7 : PlushSound("shutter16.wav"),
      # 8 is not used
      8 : PlushSound("shutter16.wav"),
-     9 : PlushSound("sounds/threshold-transitions/C3-D3.mp3"),   # -3.5
-    10 : PlushSound("sounds/threshold-transitions/D3-E3.mp3"),   # -3.0
-    11 : PlushSound("sounds/threshold-transitions/E3-F3.mp3"),   # -2.5
-    12 : PlushSound("sounds/threshold-transitions/F3-G3.mp3"),   # -2.0
-    13 : PlushSound("sounds/threshold-transitions/G3-A3.mp3"),   # -1.5
-    14 : PlushSound("sounds/threshold-transitions/A3-B3.mp3"),   # -1.0
-    15 : PlushSound("sounds/threshold-transitions/B3-C4.mp3")    # -0.5
+     9 : PlushSound("sounds/threshold-transitions/C3-D3.ogg"),   # -3.5
+    10 : PlushSound("sounds/threshold-transitions/D3-E3.ogg"),   # -3.0
+    11 : PlushSound("sounds/threshold-transitions/E3-F3.ogg"),   # -2.5
+    12 : PlushSound("sounds/threshold-transitions/F3-G3.ogg"),   # -2.0
+    13 : PlushSound("sounds/threshold-transitions/G3-A3.ogg"),   # -1.5
+    14 : PlushSound("sounds/threshold-transitions/A3-B3.ogg"),   # -1.0
+    15 : PlushSound("sounds/threshold-transitions/B3-C4.ogg")    # -0.5
 }
 
 # index is the starting value of the rotary switch before decrease
