@@ -194,46 +194,46 @@ WEIGHT_DECREASE_SOUNDS = [
 
 # index is the starting value of the rotary switch before increase
 THRESHOLD_INCREASE_SOUNDS = {
-     0 : PlushSound("sounds/threshold-transitions/C4-D4.ogg"),   #  0.0
-     1 : PlushSound("sounds/threshold-transitions/D4-E4.ogg"),   #  0.5
-     2 : PlushSound("sounds/threshold-transitions/E4-F4.ogg"),   #  1.0
-     3 : PlushSound("sounds/threshold-transitions/F4-G4.ogg"),   #  1.5
-     4 : PlushSound("sounds/threshold-transitions/G4-A#4.ogg"),  #  2.0
-     5 : PlushSound("sounds/threshold-transitions/A#4-C5.ogg"),  #  2.5
-     6 : PlushSound("sounds/threshold-transitions/C5-D5.ogg"),   #  3.0
+     0 : PlushSound("sounds/threshold-transitions/accordion_C4-D4.mp3"),   #  0.0
+     1 : PlushSound("sounds/threshold-transitions/accordion_D4-E4.mp3"),   #  0.5
+     2 : PlushSound("sounds/threshold-transitions/accordion_E4-F4.mp3"),   #  1.0
+     3 : PlushSound("sounds/threshold-transitions/accordion_F4-G4.mp3"),   #  1.5
+     4 : PlushSound("sounds/threshold-transitions/accordion_G4-A#4.mp3"),  #  2.0
+     5 : PlushSound("sounds/threshold-transitions/accordion_A#4-C5.mp3"),  #  2.5
+     6 : PlushSound("sounds/threshold-transitions/accordion_C5-D5.mp3"),   #  3.0
      # 7 is a valid weight but no increase transition
      7 : PlushSound("shutter16.wav"),
      # 8 is not used
      8 : PlushSound("shutter16.wav"),
-     9 : PlushSound("sounds/threshold-transitions/C3-D3.ogg"),   # -3.5
-    10 : PlushSound("sounds/threshold-transitions/D3-E3.ogg"),   # -3.0
-    11 : PlushSound("sounds/threshold-transitions/E3-F3.ogg"),   # -2.5
-    12 : PlushSound("sounds/threshold-transitions/F3-G3.ogg"),   # -2.0
-    13 : PlushSound("sounds/threshold-transitions/G3-A3.ogg"),   # -1.5
-    14 : PlushSound("sounds/threshold-transitions/A3-B3.ogg"),   # -1.0
-    15 : PlushSound("sounds/threshold-transitions/B3-C4.ogg")    # -0.5
+     9 : PlushSound("sounds/threshold-transitions/accordion_C3-D3.mp3"),   # -3.5
+    10 : PlushSound("sounds/threshold-transitions/accordion_D3-E3.mp3"),   # -3.0
+    11 : PlushSound("sounds/threshold-transitions/accordion_E3-F3.mp3"),   # -2.5
+    12 : PlushSound("sounds/threshold-transitions/accordion_F3-G3.mp3"),   # -2.0
+    13 : PlushSound("sounds/threshold-transitions/accordion_G3-A3.mp3"),   # -1.5
+    14 : PlushSound("sounds/threshold-transitions/accordion_A3-B3.mp3"),   # -1.0
+    15 : PlushSound("sounds/threshold-transitions/accordion_B3-C4.mp3")    # -0.5
 }
 
 # index is the starting value of the rotary switch before decrease
 THRESHOLD_DECREASE_SOUNDS = {
-     0 : PlushSound("sounds/threshold-transitions/C4-B3.ogg"),   #  0.0
-     1 : PlushSound("sounds/threshold-transitions/D4-C4.ogg"),   #  0.5
-     2 : PlushSound("sounds/threshold-transitions/E4-D4.ogg"),   #  1.0
-     3 : PlushSound("sounds/threshold-transitions/F4-E4.ogg"),   #  1.5
-     4 : PlushSound("sounds/threshold-transitions/G4-F4.ogg"),   #  2.0
-     5 : PlushSound("sounds/threshold-transitions/A#4-G4.ogg"),  #  2.5
-     6 : PlushSound("sounds/threshold-transitions/C5-A#4.ogg"),  #  3.0
-     7 : PlushSound("sounds/threshold-transitions/D5-C5.ogg"),   #  3.5
+     0 : PlushSound("sounds/threshold-transitions/accordion_C4-B3.mp3"),   #  0.0
+     1 : PlushSound("sounds/threshold-transitions/accordion_D4-C4.mp3"),   #  0.5
+     2 : PlushSound("sounds/threshold-transitions/accordion_E4-D4.mp3"),   #  1.0
+     3 : PlushSound("sounds/threshold-transitions/accordion_F4-E4.mp3"),   #  1.5
+     4 : PlushSound("sounds/threshold-transitions/accordion_G4-F4.mp3"),   #  2.0
+     5 : PlushSound("sounds/threshold-transitions/accordion_A#4-G4.mp3"),  #  2.5
+     6 : PlushSound("sounds/threshold-transitions/accordion_C5-A#4.mp3"),  #  3.0
+     7 : PlushSound("sounds/threshold-transitions/accordion_D5-C5.mp3"),   #  3.5
      # 8 is not used
      8 : PlushSound("shutter16.wav"),
      # 9 is a valid weight but no decrease transition
      9 : PlushSound("shutter16.wav"),
-    10 : PlushSound("sounds/threshold-transitions/D3-C3.ogg"),   # -3.0
-    11 : PlushSound("sounds/threshold-transitions/E3-D3.ogg"),   # -2.5
-    12 : PlushSound("sounds/threshold-transitions/F3-E3.ogg"),   # -2.0
-    13 : PlushSound("sounds/threshold-transitions/G3-F3.ogg"),   # -1.5
-    14 : PlushSound("sounds/threshold-transitions/A3-G3.ogg"),   # -1.0
-    15 : PlushSound("sounds/threshold-transitions/B3-A3.ogg")    # -0.5
+    10 : PlushSound("sounds/threshold-transitions/accordion_D3-C3.mp3"),   # -3.0
+    11 : PlushSound("sounds/threshold-transitions/accordion_E3-D3.mp3"),   # -2.5
+    12 : PlushSound("sounds/threshold-transitions/accordion_F3-E3.mp3"),   # -2.0
+    13 : PlushSound("sounds/threshold-transitions/accordion_G3-F3.mp3"),   # -1.5
+    14 : PlushSound("sounds/threshold-transitions/accordion_A3-G3.mp3"),   # -1.0
+    15 : PlushSound("sounds/threshold-transitions/accordion_B3-A3.mp3")    # -0.5
 }
 
 AXON_FIRE_SOUND = PlushSound("sounds/8-bit-laser.ogg")
