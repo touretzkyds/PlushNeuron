@@ -26,7 +26,7 @@ DENDRITE_3_BUTTON_PIN = digitalio.DigitalInOut(board.D26)
 DENDRITE_3_BARREL_PIN = digitalio.DigitalInOut(board.D20)
 
 # Threshold
-THRESHOLD_ROTARY_PINS = [digitalio.DigitalInOut(board.D2),
+THRESHOLD_ROTARY_PINS = [digitalio.DigitalInOut(board.D21),
                          digitalio.DigitalInOut(board.D3),
 		         digitalio.DigitalInOut(board.D4),
                          digitalio.DigitalInOut(board.D14)]

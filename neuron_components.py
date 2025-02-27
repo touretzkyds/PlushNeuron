@@ -4,7 +4,8 @@ from math import floor
 
 from state_machine import StateMachine, now_msecs
 from led_display import display_pattern, DENDRITE_ROTARY_COLORS, DENDRITE_ROTARY_BLANK, \
-    THRESHOLD_ROTARY_COLORS, ACTIVATION_COLORS, AXON_BLANK_PATTERN, AXON_FIRING_PATTERN
+    THRESHOLD_ROTARY_COLORS, ACTIVATION_COLORS, AXON_BLANK_PATTERN, \
+    AXON_FIRING_PATTERNS, NUM_AXON_STRIPS, NUM_PIXELS_AXON_STRIP
 from plush_sounds import queue_sound, WEIGHT_SOUNDS, WEIGHT_INCREASE_SOUNDS, WEIGHT_DECREASE_SOUNDS, \
     THRESHOLD_INCREASE_SOUNDS, THRESHOLD_DECREASE_SOUNDS, AXON_FIRE_SOUND
 import plush_sounds
@@ -14,7 +15,7 @@ import plush_sounds
 """
 
 class Debouncer():
-    BUTTON_PERSISTENCE_TIME = 100 # msecs
+    BUTTON_PERSISTENCE_TIME = 20 # msecs
     ROTARY_PERSISTENCE_TIME = 50 # msecs
     MAX_PERSISTENCE_TIME = max(BUTTON_PERSISTENCE_TIME, ROTARY_PERSISTENCE_TIME)
 
@@ -135,7 +136,7 @@ class Button(StateMachine):
             pass # state unchanged
 
     def button_pressed(self):
-        print(f"Button pressed: {self} {self.dendrite}")
+        #print(f"Button pressed: {self} {self.dendrite}")
         self.transmitted_value = 1
         sound = WEIGHT_SOUNDS[self.dendrite.dendrite_index][self.dendrite.weight_index]
         queue_sound(sound, self.button_audio_channel)
@@ -143,7 +144,7 @@ class Button(StateMachine):
         self.transition(self.states.BUTTON_ON)
 
     def button_released(self):
-        print(f"Button released: {self} {self.dendrite}")
+        #print(f"Button released: {self} {self.dendrite}")
         self.transmitted_value = 0
         self.dendrite.weight_display.finish_flash()
         self.transition(self.states.BUTTON_OFF)
@@ -162,8 +163,9 @@ class WeightDisplay(LEDDisplay):
     FLASH_OFF_DURATION = 100
     FLASH_MINIMUM_TIME = 2000
     
-    states = Enum('WeightDisplayStates', [('IDLE', 1), ('START_FLASH', 2), ('FLASH_OFF', 3),
-                                          ('FLASH_ON', 4), ('SHOW_WEIGHT', 5)])
+    states = Enum('WeightDisplayStates', [ ('SHOW_WEIGHT', 1), ('IDLE', 2),
+                                           ('START_FLASH', 3), ('FLASH_OFF', 4),
+                                           ('FLASH_ON', 5) ])
 
     def __init__(self, dendrite, led_start_index):
         super().__init__(f"WeightDisplay {dendrite.dendrite_index}", self.states, led_start_index)
@@ -197,7 +199,7 @@ class WeightDisplay(LEDDisplay):
 
 
 class ThresholdDisplay(LEDDisplay):
-    states = Enum('ThresholdDisplayStates', [('IDLE', 1), ('SHOW_THRESHOLD', 2)])
+    states = Enum('ThresholdDisplayStates', [ ('SHOW_THRESHOLD', 1), ('IDLE', 2)])
 
     def __init__(self, soma, led_start_index):
         super().__init__('ThresholdDisplay', self.states, led_start_index)
@@ -227,10 +229,12 @@ class ActivationDisplay(LEDDisplay):
 
 
 class AxonDisplay(LEDDisplay):
-    FLASH_ON_DURATION = 100
-    FLASH_OFF_DURATION = 50
+    FLASH_ON_DURATION = 5
+    NUM_CYCLES = 1
 
-    states = Enum('AxonStates', [('IDLE', 1), ('START_FLASH', 2), ('FLASH_ON', 3), ('FLASH_OFF', 4), ('SHUTDOWN', 5)])
+    states = Enum('AxonStates', [('IDLE', 1),
+                                 ('START_FLASH', 2), ('FLASH_ON', 3),
+                                 ('SHUTDOWN', 4)])
 
     def __init__(self, axon, led_start_index):
         super().__init__('AxonDisplay', self.states, led_start_index)
@@ -240,16 +244,28 @@ class AxonDisplay(LEDDisplay):
         super().update()
         t = now_msecs()
         if self.current_state == self.states.START_FLASH:
-            display_pattern(AXON_FIRING_PATTERN, self.led_start_index)
+            self.cycle_count = 0
+            self.pattern_index = 0
             self.transition(self.states.FLASH_ON)
-        elif self.current_state == self.states.FLASH_ON:
-            if self.state_duration >= self.FLASH_ON_DURATION:
-                display_pattern(AXON_BLANK_PATTERN, self.led_start_index)
-                self.transition(self.states.FLASH_OFF)
-        elif self.current_state == self.states.FLASH_OFF:
-            if self.state_duration >= self.FLASH_OFF_DURATION:
-                display_pattern(AXON_FIRING_PATTERN, self.led_start_index)
-                self.transition(self.states.FLASH_ON)
+        elif self.current_state == self.states.FLASH_ON and \
+             self.state_duration >= self.FLASH_ON_DURATION:
+            n = NUM_PIXELS_AXON_STRIP
+            for i in range(NUM_AXON_STRIPS):
+                p = AXON_FIRING_PATTERNS[self.pattern_index]
+                rp = list(p).copy()
+                rp.reverse()
+                if i%2 == 1:
+                    display_pattern(p, self.led_start_index + i*n)
+                else:
+                    display_pattern(rp, self.led_start_index + i*n)
+            self.pattern_index += 1
+            if self.pattern_index not in AXON_FIRING_PATTERNS:
+                self.pattern_index = 0
+                self.cycle_count += 1
+                if self.cycle_count >= self.NUM_CYCLES:
+                    self.transition(self.states.SHUTDOWN)
+                    return
+            self.transition(self.states.FLASH_ON)
         elif self.current_state == self.states.SHUTDOWN:
             display_pattern(AXON_BLANK_PATTERN, self.led_start_index)
             self.transition(self.states.IDLE)
@@ -294,14 +310,14 @@ class Dendrite():
             self.transmitted_value = 0
 
     def increase_weight(self):
-        print(f"increase: dendrite {self.dendrite_index} weight index {self.weight_index} will become {self.rotary_switch.current_value}")
+        #print(f"increase: dendrite {self.dendrite_index} weight index {self.weight_index} will become {self.rotary_switch.current_value}")
         sound = WEIGHT_INCREASE_SOUNDS[self.dendrite_index][self.weight_index]
         queue_sound(sound, self.rotary_audio_channel)
         self.weight_index = self.rotary_switch.current_value
         self.weight_display.transition(WeightDisplay.states.SHOW_WEIGHT)
 
     def decrease_weight(self):
-        print(f"decrease: dendrite {self.dendrite_index} weight index {self.weight_index} will become {self.rotary_switch.current_value}")
+        #print(f"decrease: dendrite {self.dendrite_index} weight index {self.weight_index} will become {self.rotary_switch.current_value}")
         sound = WEIGHT_DECREASE_SOUNDS[self.dendrite_index][self.weight_index]
         queue_sound(sound, self.rotary_audio_channel)
         self.weight_index = self.rotary_switch.current_value
@@ -377,12 +393,13 @@ class Soma(StateMachine):
         sound = THRESHOLD_DECREASE_SOUNDS[self.threshold_index]
         queue_sound(sound, self.rotary_audio_channel)
         self.threshold_index = self.rotary_switch.current_value
+        print(f"decrease threshold: threshold_index now {self.threshold_index}")
         self.threshold_display.transition(ThresholdDisplay.states.SHOW_THRESHOLD)
 
 
 class Axon(StateMachine):
-    AXON_FIRING_DURATION = 750
-    DELAY_FIRING_SOUND = 300
+    AXON_FIRING_DURATION = 1200
+    DELAY_FIRING_SOUND = 200
 
     states = Enum('AxonStates', [('IDLE', 1),
                                  ('FIRE', 2),
@@ -407,10 +424,10 @@ class Axon(StateMachine):
         if self.current_state == self.states.FIRE:
             self.firing_start_time = t
             self.barrel_pin.value = True
-            self.axon_display.transition(self.axon_display.states.START_FLASH)
             self.transition(self.states.FIRING_FLASH)
         elif self.current_state == self.states.FIRING_FLASH and \
              self.state_duration > self.DELAY_FIRING_SOUND:
+            self.axon_display.transition(self.axon_display.states.START_FLASH)
             queue_sound(AXON_FIRE_SOUND, self.activation_fire_channel)
             self.transition(self.states.FIRING_SOUND)
         elif self.current_state == self.states.FIRING_SOUND and \

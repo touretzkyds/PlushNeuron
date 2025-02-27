@@ -5,9 +5,12 @@ NUM_DENDRITES = 3
 NUM_PIXELS_WEIGHT = 7
 NUM_PIXELS_ACTIVATION = 9
 NUM_PIXELS_THRESHOLD = 9
-NUM_PIXELS_AXON = 4
+NUM_AXON_STRIPS = 3
+NUM_PIXELS_AXON_STRIP = 15
+NUM_PIXELS_AXON = NUM_AXON_STRIPS * NUM_PIXELS_AXON_STRIP
 NUM_PIXELS = NUM_DENDRITES * NUM_PIXELS_WEIGHT + \
-    NUM_PIXELS_ACTIVATION + NUM_PIXELS_THRESHOLD + NUM_PIXELS_AXON
+    NUM_PIXELS_ACTIVATION + NUM_PIXELS_THRESHOLD + \
+    NUM_PIXELS_AXON
 
 DENDRITE_1_LED_START_INDEX = 0
 DENDRITE_2_LED_START_INDEX = DENDRITE_1_LED_START_INDEX + NUM_PIXELS_WEIGHT
@@ -92,7 +95,23 @@ ACTIVATION_COLORS = {
 
 AXON_BLANK_PATTERN = (0,) * NUM_PIXELS_AXON
 
-AXON_FIRING_PATTERN = (7,) * NUM_PIXELS_AXON
+AXON_FIRING_PATTERNS = {
+     0 : (7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+     1 : (7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+     2 : (7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+     3 : (7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+     4 : (7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+     5 : (7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+     6 : (7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0),
+     7 : (7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0),
+     8 : (7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0),
+     9 : (7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0),
+    10 : (7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0),
+    11 : (7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0),
+    12 : (7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0),
+    13 : (7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0),
+    14 : (7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7)
+}
 
 def display_pattern(pattern, led_start_index):
     for i in range(len(pattern)):

@@ -58,6 +58,6 @@ def main():
             soma.update()
             axon.update()
             plush_sounds.update_all_channels()
-            time.sleep(0.01)
+            time.sleep(0.002)
 
 main()
