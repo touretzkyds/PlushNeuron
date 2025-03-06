@@ -189,8 +189,8 @@ WEIGHT_DECREASE_SOUNDS = [
 
 
 # Tones for threshold weights:
-# -3.5  -3.0  -2.5  -2.0  -1.5  -1.0  -0.5  0.0  0.5  1.0  1.5  2.0  2.5  3.0  3.5
-#  C3    D3    E3    F3    G3    A3    B3   C4   D4   E4   F4   G4   A#4  C5   D5
+# -3.5  -3.0  -2.5  -2.0  -1.5  -1.0  -0.5  0.0  0.5  1.0  1.5  2.0  2.5  3.0  3.5  4.0
+#  C3    D3    E3    F3    G3    A3    B3   C4   D4   E4   F4   G4   A#4  C5   D5   E5
 
 # index is the starting value of the rotary switch before increase
 THRESHOLD_INCREASE_SOUNDS = {
@@ -201,10 +201,8 @@ THRESHOLD_INCREASE_SOUNDS = {
      4 : PlushSound("sounds/threshold-transitions/accordion_G4-A#4.mp3"),  #  2.0
      5 : PlushSound("sounds/threshold-transitions/accordion_A#4-C5.mp3"),  #  2.5
      6 : PlushSound("sounds/threshold-transitions/accordion_C5-D5.mp3"),   #  3.0
-     # 7 is a valid weight but no increase transition
-     7 : PlushSound("shutter16.wav"),
-     # 8 is not used
-     8 : PlushSound("shutter16.wav"),
+     7 : PlushSound("sounds/threshold-transitions/accordion_D5-E5.mp3"),   #  3.5
+     8 : PlushSound("sounds/threshold-transitions/accordion_E5-C3.mp3"),   #  4,0 wrap
      9 : PlushSound("sounds/threshold-transitions/accordion_C3-D3.mp3"),   # -3.5
     10 : PlushSound("sounds/threshold-transitions/accordion_D3-E3.mp3"),   # -3.0
     11 : PlushSound("sounds/threshold-transitions/accordion_E3-F3.mp3"),   # -2.5
@@ -224,10 +222,8 @@ THRESHOLD_DECREASE_SOUNDS = {
      5 : PlushSound("sounds/threshold-transitions/accordion_A#4-G4.mp3"),  #  2.5
      6 : PlushSound("sounds/threshold-transitions/accordion_C5-A#4.mp3"),  #  3.0
      7 : PlushSound("sounds/threshold-transitions/accordion_D5-C5.mp3"),   #  3.5
-     # 8 is not used
-     8 : PlushSound("shutter16.wav"),
-     # 9 is a valid weight but no decrease transition
-     9 : PlushSound("shutter16.wav"),
+     8 : PlushSound("sounds/threshold-transitions/accordion_E5-D5.mp3"),   #  4.0
+     9 : PlushSound("sounds/threshold-transitions/accordion_C3-E5.mp3"),   # -3.5 wrap
     10 : PlushSound("sounds/threshold-transitions/accordion_D3-C3.mp3"),   # -3.0
     11 : PlushSound("sounds/threshold-transitions/accordion_E3-D3.mp3"),   # -2.5
     12 : PlushSound("sounds/threshold-transitions/accordion_F3-E3.mp3"),   # -2.0
