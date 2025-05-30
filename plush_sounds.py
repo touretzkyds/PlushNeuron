@@ -232,7 +232,7 @@ THRESHOLD_DECREASE_SOUNDS = {
     15 : PlushSound("sounds/threshold-transitions/accordion_B3-A3.mp3")    # -0.5
 }
 
-AXON_FIRE_SOUND = PlushSound("sounds/8-bit-laser.ogg")
+AXON_FIRE_SOUND = PlushSound("sounds/sweep_sound.wav")
 
 def queue_sound(sound, channel_id):
     if global_mute:
