@@ -123,9 +123,10 @@ class Button(StateMachine):
 
     def update(self):
         super().update()
-        # not handling the barrel connector for now, just the button
-        new_value = self.debouncer.debounce(self.button_gpio_pin.value)
+        new_button_value = self.debouncer.debounce(self.button_gpio_pin.value)
+        new_barrel_value = self.barrel_gpio_pin.value
         # button is pressed when pin pulled down to 0
+        new_value = min(new_button_value, new_barrel_value)
         if new_value < self.current_value:
             self.current_value = new_value
             self.button_pressed()
