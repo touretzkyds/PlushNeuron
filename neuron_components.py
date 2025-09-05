@@ -381,7 +381,9 @@ class Soma(StateMachine):
             threshold = self.THRESHOLD_VALUES[self.rotary_switch.current_value]
             if new_activation > threshold:
                 # print(f"activation {new_activation} > threshold {threshold}: FIRE!")
-                self.axon.maybe_fire()
+                self.axon.set_output_firing()
+            else:
+                self.axon.set_output_not_firing()
 
     def increase_threshold(self):
         sound = THRESHOLD_INCREASE_SOUNDS[self.threshold_index]
@@ -414,9 +416,13 @@ class Axon(StateMachine):
         self.axon_display = AxonDisplay(self, led_start_index)
         self.firing_start_time = -1
 
-    def maybe_fire(self):
+    def set_output_firing(self):
+        self.barrel_pin.value = False  # low value means firing
         if self.current_state == self.states.IDLE:
             self.transition(self.states.FIRE)
+
+    def set_output_not_firing(self):
+        self.barrel_pin.value = True
 
     def update(self):
         super().update()

@@ -48,3 +48,4 @@ def init_gpio():
         pin.pull = digitalio.Pull.UP
     for pin in output_pins:
         pin.direction = digitalio.Direction.OUTPUT
+        pin.value = True
