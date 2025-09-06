@@ -305,7 +305,7 @@ class Dendrite():
         self.rotary_switch.update()
         self.button.update()
         self.weight_display.update()
-        if self.button.current_value == 0:
+        if self.button.transmitted_value == 1:
             self.transmitted_value = self.WEIGHT_VALUES[self.weight_index]
         else:
             self.transmitted_value = 0
