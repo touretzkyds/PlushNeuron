@@ -305,7 +305,7 @@ class Dendrite():
         self.rotary_switch.update()
         self.button.update()
         self.weight_display.update()
-        if self.button.transmitted_value == 1:
+        if self.button.current_value == 0:
             self.transmitted_value = self.WEIGHT_VALUES[self.weight_index]
         else:
             self.transmitted_value = 0
@@ -430,7 +430,6 @@ class Axon(StateMachine):
         t = now_msecs()
         if self.current_state == self.states.FIRE:
             self.firing_start_time = t
-            self.barrel_pin.value = True
             self.transition(self.states.FIRING_FLASH)
         elif self.current_state == self.states.FIRING_FLASH and \
              self.state_duration > self.DELAY_FIRING_SOUND:
@@ -440,7 +439,6 @@ class Axon(StateMachine):
         elif self.current_state == self.states.FIRING_SOUND and \
              (t - self.firing_start_time) > self.AXON_FIRING_DURATION:
             self.axon_display.transition(self.axon_display.states.SHUTDOWN)
-            self.barrel_pin.value = False
             self.transition(self.states.IDLE)
         else: # idle
             pass

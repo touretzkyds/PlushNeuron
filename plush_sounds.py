@@ -24,8 +24,8 @@ channel_ids = [
     ACTIVATION_FIRE_CHANNEL
 ]
 
-pygame.mixer.init()
-pygame.mixer.music.set_volume(0.9) #volume at 90%
+pygame.mixer.init(frequency=48000, buffer=1024)
+pygame.mixer.music.set_volume(1.0) #volume at 100%
 channels = [pygame.mixer.Channel(i) for i in channel_ids]
 
 sound_queues = [list() for c in channels]
